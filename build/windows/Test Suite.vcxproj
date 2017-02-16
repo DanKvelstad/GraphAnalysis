@@ -11,7 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\testcases\libraries.cpp" />
+    <ClCompile Include="..\..\sources\testcases\test_libraries.cpp" />
+    <ClCompile Include="..\..\sources\testcases\test_moore.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6067C1EE-D429-41C5-9CD2-3EBA7D668798}</ProjectGuid>
