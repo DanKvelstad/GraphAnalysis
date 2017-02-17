@@ -4,12 +4,12 @@
 
 enum class state
 {
-	s0, s1, s2, s3, s4
+	s0, s1, s2
 };
 
 enum class edge
 {
-	e0, e1, e2, e3, e4
+	e0
 };
 
 TEST(Moore, Simple)
@@ -33,8 +33,8 @@ TEST(Moore, Simple)
 		}
 	);
 
-	mut.add_edge(state::s0, edge::e0, state::s1);
-	mut.add_edge(state::s1,           state::s0);
+	mut.add_transition(state::s0, edge::e0, state::s1);
+	mut.add_transition(state::s1,           state::s0);
 
 	mut.handle_event(edge::e0);
 

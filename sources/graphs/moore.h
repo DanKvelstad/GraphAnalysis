@@ -4,186 +4,219 @@
 #include <map>
 #include <functional>
 
-template<class StateT, class EventT>
+template<class state_type, class event_type>
 class moore
 {
 
-public:
+private:
 
-	typedef EventT EventType;
-	typedef StateT StateType;
-	
+	class internal_state
+	{
+
+	public:
+
+		internal_state(std::function<void(void)> activation_callback)
+		: activation_callback(activation_callback)
+		{
+		}
+
+		internal_state(const internal_state&)				= delete;
+		internal_state& operator=(const internal_state&)	= delete;
+
+		internal_state(internal_state&& moved)
+		: activation_callback(std::move(moved.activation_callback))
+		, auto_edge(moved.auto_edge)
+		, event_edges(std::move(moved.event_edges))
+		{
+
+		}
+
+		internal_state& operator=(internal_state&& moved)
+		{
+			activation_callback = std::move(moved.activation_callback);
+			auto_edge			= moved.auto_edge;
+			event_edges			= std::move(moved.event_edges);
+			return *this;
+		}
+		
+		~internal_state(void)
+		{
+		}
+
+		void make_edge(state_type target_state)
+		{
+
+			if(auto_edge.first)
+			{
+				throw std::exception("Cannot add a second auto edge");
+			}
+			else if(!event_edges.empty())
+			{
+				throw std::exception("Cannot insert an auto edge, there are event edges");
+			}
+			else
+			{
+				auto_edge.first		= true;
+				auto_edge.second	= target_state;
+			}
+
+		}
+
+		void make_edge(event_type event, state_type target_state)
+		{
+
+			if(auto_edge.first)
+			{
+				throw std::exception("Cannot add an event edge, there was a auto edge");
+			}
+			else if(!event_edges.insert(std::make_pair(event, target_state)).second)
+			{
+				throw std::exception("The event is already associated with an edge");
+			}
+
+		}
+
+		state_type process(event_type event)
+		{
+			
+			auto edge(event_edges.find(event));
+			if(event_edges.end() == edge)
+			{
+				throw std::exception("There is no edge for that event");
+			}
+
+			return edge->second;
+
+		}
+
+		std::pair<bool, state_type> activate(void)
+		{
+			activation_callback();
+			return auto_edge;
+		}
+
+	private:
+
+		std::function<void(void)>			activation_callback;
+
+		std::pair<bool, state_type>			auto_edge;
+		std::map<event_type, state_type>	event_edges;
+
+	};
+
 public:
 
 	moore(
-		StateT						StartState, 
-		std::function<void(void)>	StartStateCallback
+		state_type					start_state, 
+		std::function<void(void)>	start_state_callback
 	)
-	: StartState(StartState)
+	: start_state(start_state)
 	{
-		add_state(StartState, StartStateCallback);
-		set_current_state(StartState);
+		add_state(start_state, start_state_callback);
+		set_current_state(start_state);
 	}
 	
 	~moore(void)
 	{
 	}
-
-	void reset()
+	
+	void add_state(state_type new_state, std::function<void(void)> callback)
 	{
 
-		std::lock_guard<std::mutex> StateLock(StateMutex);
-
-		set_current_state(StartState);
-
-	}
-
-	void add_state(StateT State, std::function<void(void)> Callback)
-	{
-
-		std::lock_guard<std::mutex> StateLock(StateMutex);
+		std::lock_guard<std::mutex> lock(state_mutex);
 		
-		auto AddedState(
-			States.insert(
-				std::make_pair(
-					State, 
-					Callback
-				)
-			).second
-		);
-
-		if(!AddedState)
+		if(!states.insert(std::make_pair(new_state, internal_state(callback))).second)
 		{
 			throw std::exception("Could not add state");
 		}
 
 	}
 
-	virtual void add_edge(StateT SourceState, StateT TargetState)
+	virtual void add_transition(state_type desired_source_state, state_type desired_target_state)
 	{
 
-		std::lock_guard<std::mutex> StateLock(StateMutex);
+		std::lock_guard<std::mutex> lock(state_mutex);
 
-		if(0 == States.count(SourceState))
+		auto found_source_state(states.find(desired_source_state));
+		if(states.end() == found_source_state)
 		{
 			throw std::exception("Source state must be added before the edge");
 		}
 
-		if(0 == States.count(TargetState))
+		auto found_target_state(states.find(desired_target_state));
+		if(states.end() == found_target_state)
 		{
 			throw std::exception("Target state must be added before the edge");
 		}
 
-		auto InsertionResult(
-			AutoEdges.insert(
-				std::make_pair(
-					SourceState, 
-					TargetState
-				)
-			).second
-		);
-
-		if(!InsertionResult)
-		{
-			throw std::exception("Cannot add edge, it has already been added");
-		}
+		found_source_state->second.make_edge(desired_target_state);
 
 	}
 
-	virtual void add_edge(StateT SourceState, EventT Event, StateT TargetState)
+	virtual void add_transition(state_type desired_source_state, event_type event, state_type desired_target_state)
 	{
 
-		std::lock_guard<std::mutex> StateLock(StateMutex);
+		std::lock_guard<std::mutex> lock(state_mutex);
 
-		if(0 == States.count(SourceState))
+		auto found_source_state(states.find(desired_source_state));
+		if(states.end() == found_source_state)
 		{
 			throw std::exception("Source state must be added before the edge");
 		}
 
-		if(0 == States.count(TargetState))
+		auto found_target_state(states.find(desired_target_state));
+		if(states.end() == found_target_state)
 		{
 			throw std::exception("Target state must be added before the edge");
 		}
 
-		auto& EdgesForEvent(
-			EventEdges.insert(
-				std::make_pair(
-					Event, 
-					decltype(EventEdges)::mapped_type()
-				)
-			).first->second
-		);
-
-		auto EdgeWasAdded(
-			EdgesForEvent.insert(
-				std::make_pair(
-					SourceState, 
-					TargetState
-				)
-			).second
-		);
-		
-		if(!EdgeWasAdded)
-		{
-			throw std::exception("Could not add edge, it has already been added");
-		}
+		found_source_state->second.make_edge(event, desired_target_state);
 
 	}
 
-	virtual void handle_event(EventT Event)
+	virtual void handle_event(event_type event)
 	{
 
-		std::lock_guard<std::mutex> StateLock(StateMutex);
+		std::lock_guard<std::mutex> lock(state_mutex);
 
-		auto EdgesForEvent(EventEdges.find(Event));
-		if(std::end(EventEdges) == EdgesForEvent)
+		auto found_state(states.find(current_state));
+		if(states.end() == found_state)
 		{
-			throw std::exception("There are no event-edges for the event");
+			throw std::exception("Source state must be added before the edge");
 		}
-	
-		auto SelectedEdge(EdgesForEvent->second.find(CurrentState));
-		if(std::end(EdgesForEvent->second) == SelectedEdge)
+		else
 		{
-			throw std::exception("There are no edge for this event from the current state");
+			set_current_state(found_state->second.process(event));
 		}
-
-		set_current_state(SelectedEdge->second);
 
 	}
 
 private:
 
-	void set_current_state(StateT State)
+	void set_current_state(state_type desired_state)
 	{
 
-		auto StateEntry(States.find(State));
-
-		if(States.end() == StateEntry)
+		auto desired_state_it(states.find(desired_state));
+		if(states.end() == desired_state_it)
 		{
 			throw std::exception("Internal Error! Attempting to set invalid state");
 		}
 
-		CurrentState = StateEntry->first;
+		current_state = desired_state_it->first;
 
-		StateEntry->second();
-
-		auto AutoEdgeEntry(AutoEdges.find(CurrentState));
-		if(std::end(AutoEdges) != AutoEdgeEntry)
+		auto subsequent(desired_state_it->second.activate());
+		if(subsequent.first)
 		{
-			set_current_state(AutoEdgeEntry->second);
+			set_current_state(subsequent.second);
 		}
-
+		
 	}
 
 private:
 
-	mutable std::mutex	StateMutex;
-
-	std::map<StateT, std::function<void(void)>>		States;
-	std::map<StateT, StateT>						AutoEdges;
-	std::map<EventT, std::map<StateT, StateT>>		EventEdges;
-	
-	StateT StartState;
-	StateT CurrentState;
+	mutable std::mutex						state_mutex;
+	std::map<state_type, internal_state>	states;
+	state_type								start_state;
+	state_type								current_state;
 
 };
