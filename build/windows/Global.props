@@ -3,11 +3,14 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup>
     <OutDir>$(SolutionDir)..\..\binaries\Windows $(Platform) $(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\intermediate\Windows $(Platform) $(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)..\..\intermediate\Windows $(Platform) $(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <BuildLog>
       <Path>$(IntDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\sources\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemDefinitionGroup>
 </Project>
