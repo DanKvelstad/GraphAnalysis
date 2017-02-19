@@ -11,6 +11,8 @@
     </BuildLog>
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\sources\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>
