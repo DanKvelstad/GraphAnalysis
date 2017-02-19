@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test Suite", "Test Suite.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Analysis", "Analysis.vcxproj", "{C1F99296-16F1-4CAA-96EB-D2CFDEBB577C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Support", "Support\Support.vcxproj", "{763F2171-6787-464F-96AE-7082220BEDA9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Support", "Support.vcxproj", "{763F2171-6787-464F-96AE-7082220BEDA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
