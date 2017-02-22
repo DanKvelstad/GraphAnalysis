@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\sources\libraries\git.cpp" />
+    <ClCompile Include="..\..\sources\libraries\msbuild.cpp" />
     <ClCompile Include="..\..\sources\libraries\os.cpp" />
     <ClCompile Include="..\..\sources\libraries\find.cpp" />
     <ClCompile Include="..\..\sources\libraries\library_googletest.cpp" />
@@ -27,7 +29,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\sources\libraries\filesystem.h" />
+    <ClInclude Include="..\..\sources\libraries\git.h" />
     <ClInclude Include="..\..\sources\libraries\libraries.h" />
+    <ClInclude Include="..\..\sources\libraries\msbuild.h" />
     <ClInclude Include="..\..\sources\libraries\os.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

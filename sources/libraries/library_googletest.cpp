@@ -1,5 +1,7 @@
+#include "msbuild.h"
 #include "filesystem.h"
 #include "os.h"
+#include "git.h"
 #include <experimental/filesystem>
 #include <string>
 #include <iostream>
@@ -11,112 +13,6 @@
 
 using namespace std::experimental;
 
-bool git_prepare(const filesystem::path& googletest)
-{
-
-	if(!is_timestamp_expired("timestamp_googletest.txt"))
-	{
-		std::cout << "googletest was updated and built within the last 24h, leaving it as-is" << std::endl;
-		return false;
-	}
-
-	std::cout << "googletest is older than 24h, updating and rebuilding it" << std::endl;
-
-	if(filesystem::exists(googletest/".git"))
-	{
-
-		std::cout << "found the googletest repository" << std::endl;
-
-		std::cout << "now resetting it" << std::endl;
-		std::string command_reset(
-			"cd " + googletest.string()	+ "&&" +
-			"git reset"					+ "&&" +
-			"git checkout ."			+ "&&" +
-			"git clean -fdx"
-		);
-		system(command_reset.c_str());
-
-		std::cout << "now pulling from the master branch" << std::endl;
-		std::string command_pull(
-			"cd " + googletest.string() + "&&"
-			"git pull"
-		);
-		system(command_pull.c_str());
-
-	}
-	else
-	{
-
-		std::cout << "could not find googletest repository" << std::endl;
-
-		filesystem::remove_all(googletest);
-		std::string github("https://github.com/google/googletest.git");
-		std::string command_clone("git clone " + github + " " + googletest.string());
-		std::cout << command_clone << std::endl;
-		system(command_clone.c_str());
-
-	}
-
-	return true;
-
-}
-
-void change_runtime(const filesystem::path& path_msvc)
-{
-
-	for(auto& file : filesystem::directory_iterator(path_msvc))
-	{
-		if(".vcxproj" == file.path().extension())
-		{
-
-			auto path_old(file.path());
-			auto path_new(path_old);
-			path_new.replace_extension(".tmp");
-
-			std::ifstream is(path_old.string());
-			std::ofstream os(path_new.string());
-
-			std::string buffer(1024, '\0');
-			for(
-				is.getline(&buffer[0], buffer.size());
-				is;
-				is.getline(&buffer[0], buffer.size())
-			)
-			{
-
-				std::string line(buffer.c_str());
-
-				if(std::string::npos != line.find("<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"))
-				{
-					os << "      <RuntimeLibrary>MultiThreadedDll</RuntimeLibrary>\n";
-				}
-				else if(std::string::npos != line.find("<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"))
-				{
-					os << "      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>\n";
-				}
-				else
-				{
-					os << line << "\n";
-				}
-				
-			}
-
-			os.close();
-			is.close();
-
-			filesystem::copy_file(
-				path_new, 
-				path_old, 
-				filesystem::copy_options::overwrite_existing
-			);
-			filesystem::remove(path_new);
-
-		}
-
-	}
-
-}
-
 void build_vs(const filesystem::path& path_root)
 {
 
@@ -127,7 +23,7 @@ void build_vs(const filesystem::path& path_root)
 	system(command_upgrade.c_str());
 	std::cout << "done" << std::endl;
 
-	change_runtime(path_msvc);
+	msbuild_change_runtime(path_msvc);
 	
 	std::string configuration;
 	switch(get_configuration())
@@ -177,7 +73,14 @@ void library_googletest(void)
 
 	filesystem::path googletest(find_libraries()/"googletest");
 
-	if(git_prepare(googletest))
+	if(
+		git_prepare(
+			"googletest",
+			googletest, 
+			"timestamp_googletest.txt",
+			"https://github.com/google/googletest.git"
+		)
+	)
 	{
 
 		switch(get_os())

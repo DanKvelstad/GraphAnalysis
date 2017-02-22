@@ -25,18 +25,34 @@ filesystem::path find_output(void)
 {
 
 	auto path(find_root() / "binaries");
+	
+	std::string configuration;
+	switch(get_configuration())
+	{
+	case configuration::debug:
+		configuration = "Debug";
+		break;
+	case configuration::release:
+		configuration = "Release";
+		break;
+	default:
+		throw std::exception("unknown configuration");
+		break;
+	}
 
-#ifdef _DEBUG
-	std::string configuration("Debug");
-#else
-	std::string configuration("Release");
-#endif
-
-#ifdef WIN32
-	std::string platform("Win32");
-#else
-	std::string platform("x64");
-#endif
+	std::string platform;
+	switch(get_platform())
+	{
+	case platform::x86:
+		platform = "x86";
+		break;
+	case platform::x64:
+		platform = "x64";
+		break;
+	default:
+		throw std::exception("unknown platform");
+		break;
+	}
 
 	path /= ("Windows " + platform + " " + configuration);
 
@@ -53,18 +69,34 @@ filesystem::path find_intermediate(void)
 {
 
 	auto path(find_root()/"intermediate");
+	
+	std::string configuration;
+	switch(get_configuration())
+	{
+	case configuration::debug:
+		configuration = "Debug";
+		break;
+	case configuration::release:
+		configuration = "Release";
+		break;
+	default:
+		throw std::exception("unknown configuration");
+		break;
+	}
 
-#ifdef _DEBUG
-	std::string configuration("Debug");
-#else
-	std::string configuration("Release");
-#endif
-
-#ifdef WIN32
-	std::string platform("Win32");
-#else
-	std::string platform("x64");
-#endif
+	std::string platform;
+	switch(get_platform())
+	{
+	case platform::x86:
+		platform = "Win32";
+		break;
+	case platform::x64:
+		platform = "x64";
+		break;
+	default:
+		throw std::exception("unknown platform");
+		break;
+	}
 
 	path /= ("Windows " + platform + " " + configuration);
 	path /= "Libraries";
