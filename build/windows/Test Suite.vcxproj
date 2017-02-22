@@ -16,7 +16,11 @@
     <ClCompile Include="..\..\sources\testcases\test_moore.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Support\Support.vcxproj">
+    <ProjectReference Include="Libraries.vcxproj">
+      <Project>{4bb7072a-1aed-4ce7-84aa-c3d56df9b3bc}</Project>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <ProjectReference Include="Support.vcxproj">
       <Project>{763f2171-6787-464f-96ae-7082220beda9}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -74,8 +78,6 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Support.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -94,8 +96,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Support.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

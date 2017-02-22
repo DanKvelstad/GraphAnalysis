@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\sources\libraries\main.cpp" />
+    <ClCompile Include="..\..\sources\libraries\console.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\find.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\timestamp.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\library_googletest.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="support">
+      <UniqueIdentifier>{d42fbfa4-4fbe-41e5-a9af-b3c81a5dcfd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libraries">
+      <UniqueIdentifier>{62cc4110-d30f-4758-846c-f7e1a6e88b77}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\sources\libraries\libraries.h">
+      <Filter>libraries</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
