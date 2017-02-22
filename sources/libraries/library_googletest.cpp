@@ -68,6 +68,45 @@ void build_make(const filesystem::path& path_root)
 
 }
 
+void move_result(const filesystem::path& path_root)
+{
+
+	filesystem::path output(path_root /"googletest"/"msvc"/"gtest");
+	filesystem::path gtest;
+	filesystem::path gtest_main;
+
+	std::string configuration;
+	switch(get_configuration())
+	{
+	case configuration::debug:
+		output /= "Debug";
+		filesystem::copy_file(
+			output/"gtestd.lib",
+			find_output()/"gtestd.lib"
+		);
+		filesystem::copy_file(
+			output/"gtest_maind.lib",
+			find_output()/"gtest_maind.lib"
+		);
+		break;
+	case configuration::release:
+		output /= "Release";
+		filesystem::copy_file(
+			output / "gtest.lib",
+			find_output() / "gtest.lib"
+		);
+		filesystem::copy_file(
+			output / "gtest_main.lib",
+			find_output() / "gtest_main.lib"
+		);
+		break;
+	default:
+		throw std::exception("unknown configuration");
+		break;
+	}
+
+}
+
 void library_googletest(void)
 {
 
@@ -96,7 +135,9 @@ void library_googletest(void)
 		default:
 			break;
 		}
-	
+
+		move_result(googletest);
+		
 	}
 
 }

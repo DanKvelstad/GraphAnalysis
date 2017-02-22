@@ -44,7 +44,7 @@ filesystem::path find_output(void)
 	switch(get_platform())
 	{
 	case platform::x86:
-		platform = "x86";
+		platform = "Win32";
 		break;
 	case platform::x64:
 		platform = "x64";
