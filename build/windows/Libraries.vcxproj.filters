@@ -2,17 +2,17 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\..\sources\libraries\main.cpp" />
-    <ClCompile Include="..\..\sources\libraries\console.cpp">
+    <ClCompile Include="..\..\sources\libraries\library_googletest.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\os.cpp">
       <Filter>support</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sources\libraries\find.cpp">
-      <Filter>support</Filter>
+      <Filter>filesystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sources\libraries\timestamp.cpp">
-      <Filter>support</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sources\libraries\library_googletest.cpp">
-      <Filter>libraries</Filter>
+      <Filter>filesystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -22,10 +22,19 @@
     <Filter Include="libraries">
       <UniqueIdentifier>{62cc4110-d30f-4758-846c-f7e1a6e88b77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="filesystem">
+      <UniqueIdentifier>{f06853e1-9545-4cd1-8c19-884d23a0f874}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\sources\libraries\libraries.h">
       <Filter>libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\libraries\os.h">
+      <Filter>support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\libraries\filesystem.h">
+      <Filter>filesystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

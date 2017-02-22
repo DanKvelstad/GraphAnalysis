@@ -19,14 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\sources\libraries\console.cpp" />
+    <ClCompile Include="..\..\sources\libraries\os.cpp" />
     <ClCompile Include="..\..\sources\libraries\find.cpp" />
     <ClCompile Include="..\..\sources\libraries\library_googletest.cpp" />
     <ClCompile Include="..\..\sources\libraries\main.cpp" />
     <ClCompile Include="..\..\sources\libraries\timestamp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\sources\libraries\filesystem.h" />
     <ClInclude Include="..\..\sources\libraries\libraries.h" />
+    <ClInclude Include="..\..\sources\libraries\os.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4BB7072A-1AED-4CE7-84AA-C3D56DF9B3BC}</ProjectGuid>

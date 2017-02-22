@@ -1,3 +1,5 @@
+#include "filesystem.h"
+#include "os.h"
 #include <experimental/filesystem>
 #include <string>
 #include <iostream>
@@ -71,39 +73,42 @@ void change_runtime(const filesystem::path& path_msvc)
 			auto path_new(path_old);
 			path_new.replace_extension(".tmp");
 
+			std::ifstream is(path_old.string());
+			std::ofstream os(path_new.string());
+
+			std::string buffer(1024, '\0');
+			for(
+				is.getline(&buffer[0], buffer.size());
+				is;
+				is.getline(&buffer[0], buffer.size())
+			)
 			{
 
-				std::ifstream is(path_old.string());
-				std::ofstream os(path_new.string());
+				std::string line(buffer.c_str());
 
-				std::string buffer(1024, '\0');
-				for(
-					is.getline(&buffer[0], buffer.size());
-					is;
-					is.getline(&buffer[0], buffer.size())
-				)
+				if(std::string::npos != line.find("<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"))
 				{
-
-					std::string line(buffer.c_str());
-
-					if(std::string::npos != line.find("<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"))
-					{
-						os << "      <RuntimeLibrary>MultiThreadedDll</RuntimeLibrary>\n";
-					}
-					else if(std::string::npos != line.find("<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"))
-					{
-						os << "      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>\n";
-					}
-					else
-					{
-						os << line << "\n";
-					}
-					
+					os << "      <RuntimeLibrary>MultiThreadedDll</RuntimeLibrary>\n";
 				}
-
+				else if(std::string::npos != line.find("<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"))
+				{
+					os << "      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>\n";
+				}
+				else
+				{
+					os << line << "\n";
+				}
+				
 			}
-			
-			filesystem::copy_file(path_new, path_old, filesystem::copy_options::overwrite_existing);
+
+			os.close();
+			is.close();
+
+			filesystem::copy_file(
+				path_new, 
+				path_old, 
+				filesystem::copy_options::overwrite_existing
+			);
 			filesystem::remove(path_new);
 
 		}
@@ -124,17 +129,33 @@ void build_vs(const filesystem::path& path_root)
 
 	change_runtime(path_msvc);
 	
-#ifdef _DEBUG
-	std::string configuration(" /p:Configuration=Debug");
-#else
-	std::string configuration(" /p:Configuration=Release");
-#endif
+	std::string configuration;
+	switch(get_configuration())
+	{
+	case configuration::debug:
+		configuration = " /p:Configuration=Debug";
+		break;
+	case configuration::release:
+		configuration = " /p:Configuration=Release";
+		break;
+	default:
+		throw std::exception("unknown configuration");
+		break;
+	}
 
-#ifdef WIN32
-	std::string platform(" /p:Platform=x86");
-#else
-	std::string platform(" /p:Platform=x64");
-#endif
+	std::string platform;
+	switch(get_platform())
+	{
+	case platform::x86:
+		platform = " /p:Platform=x86";
+		break;
+	case platform::x64:
+		platform = " /p:Platform=x64";
+		break;
+	default:
+		throw std::exception("unknown platform");
+		break;
+	}
 
 	std::string command_build(
 		"cd " + (path_root / "googletest" / "msvc").string() + "&&" +
@@ -151,7 +172,7 @@ void build_make(const filesystem::path& path_root)
 
 }
 
-void library_googletest(const os& current)
+void library_googletest(void)
 {
 
 	filesystem::path googletest(find_libraries()/"googletest");
@@ -159,7 +180,7 @@ void library_googletest(const os& current)
 	if(git_prepare(googletest))
 	{
 
-		switch(current)
+		switch(get_os())
 		{
 		case os::windows:
 			std::cout << "rebuilding with msbuild" << std::endl;

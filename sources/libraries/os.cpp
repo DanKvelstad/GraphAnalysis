@@ -1,4 +1,4 @@
-#include "console.h"
+#include "os.h"
 #include <cstdio>
 #include <iostream>
 #include <memory>
@@ -13,6 +13,33 @@
 #  define POPEN  popen
 #  define PCLOSE pclose
 #endif
+
+os get_os(void)
+{
+#ifdef _WIN32
+	return os::windows;
+#else
+	return os::linux;
+#endif
+}
+
+configuration get_configuration(void)
+{
+#ifdef _DEBUG
+	return configuration::debug;
+#else
+	return configuration::release;
+#endif
+}
+
+platform get_platform(void)
+{
+#ifdef WIN32
+	return platform::x86;
+#else
+	return platform::x64;
+#endif
+}
 
 std::string console(const char* cmd)
 {
