@@ -23,6 +23,11 @@ void build_vs(const filesystem::path& path_root)
 	system(command_upgrade.c_str());
 	std::cout << "done" << std::endl;
 
+	if(platform::x64 == get_platform())
+	{
+		msbuild_convert_to_x64(path_msvc);
+	}
+
 	msbuild_change_runtime(path_msvc);
 	
 	std::string configuration;
