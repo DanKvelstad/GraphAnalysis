@@ -29,6 +29,8 @@ void build_vs(const filesystem::path& path_root)
 	}
 
 	msbuild_change_runtime(path_msvc);
+	msbuild_remove_project(path_msvc, "gtest_unittest");
+	msbuild_remove_project(path_msvc, "gtest_prod_test");
 	
 	std::string configuration;
 	switch(get_configuration())
@@ -87,22 +89,26 @@ void move_result(const filesystem::path& path_root)
 		output /= "Debug";
 		filesystem::copy_file(
 			output/"gtestd.lib",
-			find_output()/"gtestd.lib"
+			find_output()/"gtestd.lib",
+			filesystem::copy_options::overwrite_existing
 		);
 		filesystem::copy_file(
 			output/"gtest_maind.lib",
-			find_output()/"gtest_maind.lib"
+			find_output()/"gtest_maind.lib",
+			filesystem::copy_options::overwrite_existing
 		);
 		break;
 	case configuration::release:
 		output /= "Release";
 		filesystem::copy_file(
 			output / "gtest.lib",
-			find_output() / "gtest.lib"
+			find_output() / "gtest.lib",
+			filesystem::copy_options::overwrite_existing
 		);
 		filesystem::copy_file(
 			output / "gtest_main.lib",
-			find_output() / "gtest_main.lib"
+			find_output() / "gtest_main.lib",
+			filesystem::copy_options::overwrite_existing
 		);
 		break;
 	default:
