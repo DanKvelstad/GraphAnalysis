@@ -121,7 +121,7 @@ void library_googletest(void)
 		git_prepare(
 			"googletest",
 			googletest, 
-			"timestamp_googletest.txt",
+			"library_googletest.timestamp",
 			"https://github.com/google/googletest.git"
 		)
 	)
