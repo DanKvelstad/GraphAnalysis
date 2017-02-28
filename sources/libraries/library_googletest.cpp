@@ -9,6 +9,7 @@
 #include <regex>
 #include <fstream>
 #include <thread>
+#include <chrono>
 #include "libraries.h"
 
 using namespace std::experimental;
@@ -121,26 +122,58 @@ void move_result(const filesystem::path& path_root)
 void library_googletest(void)
 {
 
-	filesystem::path googletest(find_libraries()/"googletest");
+	std::cout	<< "\n+----------------------------------------+\n"
+				<< "| Start of Google Test Library ----------|\n"
+				<< "+----------------------------------------+" << std::endl;
 
-	if(
+	bool do_build;
+
+	filesystem::path googletest(find_libraries()/"googletest");
+	std::cout << "The path is assumed to be: " << googletest.string() << std::endl;
+	
+	if(!filesystem::exists(find_output() / "gtestd.lib"))
+	{
+		std::cout << "The binaries could not be found and therefore needs to be built" << std::endl;
+		do_build = true;
+	}
+	else if(
 		git_prepare(
-			"googletest",
 			googletest, 
-			"library_googletest.timestamp",
+			"library_googletest.timestamp",				// todo convert into timepoint
 			"https://github.com/google/googletest.git"
 		)
 	)
 	{
 
+		auto master_timestamp(git_timestamp(googletest));
+		auto output_timestamp(filesystem::last_write_time(find_output() / "gtestd.lib"));
+		do_build = master_timestamp > output_timestamp;
+		if(do_build)
+		{
+			std::cout << "The binaries are out-of-date and needs to be rebuilt" << std::endl;
+		}
+		else
+		{
+			std::cout << "The binaries are up-to-date and does not need to be rebuilt" << std::endl;
+		}
+
+	}
+	else
+	{
+		do_build = false;
+	}
+
+	if(do_build)
+	{
+
 		switch(get_os())
 		{
 		case os::windows:
-			std::cout << "rebuilding with msbuild" << std::endl;
+			std::cout << "Rebuilding with msbuild" << std::endl;
 			build_vs(googletest);
 			break;
 		case os::linux:
-			std::cout << "rebuilding with make" << std::endl;
+			std::cout << "Rebuilding with make" << std::endl;
 			build_make(googletest);
 			break;
 		default:
@@ -148,7 +181,15 @@ void library_googletest(void)
 		}
 
 		move_result(googletest);
-		
+
+	}
+	else
+	{
+		std::cout << "No need to build the library" << std::endl;
 	}
 
+	std::cout	<< "+----------------------------------------+\n"
+				<< "| End of Google Test Library ------------|\n"
+				<< "+----------------------------------------+\n" << std::endl;
+	
 }

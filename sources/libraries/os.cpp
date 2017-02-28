@@ -41,11 +41,11 @@ platform get_platform(void)
 #endif
 }
 
-std::string console(const char* cmd)
+std::string console(const std::string& cmd)
 {
 	std::array<char, 128> buffer;
 	std::string result;
-	std::shared_ptr<FILE> pipe(POPEN(cmd, "r"), PCLOSE);
+	std::shared_ptr<FILE> pipe(POPEN(cmd.c_str(), "r"), PCLOSE);
 	if(!pipe) throw std::runtime_error("popen() failed!");
 	while(!feof(pipe.get()))
 	{

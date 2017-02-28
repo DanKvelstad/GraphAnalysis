@@ -22,4 +22,4 @@ enum class platform
 };
 platform get_platform();
 
-std::string console(const char* cmd);
+std::string console(const std::string& cmd);
