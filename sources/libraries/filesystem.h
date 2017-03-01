@@ -3,10 +3,11 @@
 
 using namespace std::experimental;
 
-std::chrono::system_clock::time_point get_timestamp(filesystem::path file);
-bool is_timestamp_expired(std::string id);
+std::chrono::system_clock::time_point read_timestamp(filesystem::path file);
+void update_timestamp(filesystem::path file);
 
 filesystem::path find_output(void);
+filesystem::path find_timestamps(void);
 filesystem::path find_intermediate(void);
 filesystem::path find_libraries(void);
 std::string      find_msbuild(void);

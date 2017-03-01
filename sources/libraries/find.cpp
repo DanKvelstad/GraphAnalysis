@@ -21,6 +21,11 @@ filesystem::path find_root(void)
 	
 }
 
+filesystem::path find_timestamps(void)
+{
+	return find_root()/"intermediate";
+}
+
 filesystem::path find_output(void)
 {
 

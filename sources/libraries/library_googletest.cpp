@@ -131,7 +131,7 @@ void library_googletest(void)
 
 	filesystem::path googletest(find_libraries() / "googletest");
 
-	auto timestamp_git_last_update(get_timestamp(find_intermediate()/"library_googletest.timestamp"));
+	auto timestamp_git_last_update(read_timestamp(find_timestamps()/"googletest.timestamp"));
 	auto git_update_delta(std::chrono::system_clock::now()-timestamp_git_last_update);
 	std::cout << "git repository was updated ";
 	if(git_update_delta < std::chrono::hours(1))
@@ -149,6 +149,7 @@ void library_googletest(void)
 				googletest,
 				"https://github.com/google/googletest.git"
 			);
+			update_timestamp(find_timestamps() /"googletest.timestamp");
 		}
 	}
 	
