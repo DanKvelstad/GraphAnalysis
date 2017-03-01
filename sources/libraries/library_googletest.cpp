@@ -19,9 +19,13 @@ void build_vs(const filesystem::path& path_root)
 
 	auto path_msvc(path_root / "googletest" / "msvc");
 
+	std::ofstream ofs(find_intermediate()/"library_googletest.log");
+
 	std::cout << "upgrading the solution... ";
+	std::cout.flush();
 	std::string command_upgrade(find_devenv() + " " + (path_msvc / "gtest.sln").string() + " /upgrade");
-	system(command_upgrade.c_str());
+	ofs << command_upgrade << std::endl;
+	ofs << console(command_upgrade.c_str());
 	std::cout << "done" << std::endl;
 
 	if(platform::x64 == get_platform())
@@ -44,7 +48,6 @@ void build_vs(const filesystem::path& path_root)
 		break;
 	default:
 		throw std::exception("unknown configuration");
-		break;
 	}
 
 	std::string platform;
@@ -58,16 +61,17 @@ void build_vs(const filesystem::path& path_root)
 		break;
 	default:
 		throw std::exception("unknown platform");
-		break;
 	}
 
+	std::cout << "building solution... ";
+	std::cout.flush();
 	std::string command_build(
 		"cd " + (path_root / "googletest" / "msvc").string() + "&&" +
-		find_msbuild() + " gtest.sln /t:Build" + configuration+platform
+		find_msbuild() + " gtest.sln /t:Build" + configuration + platform
 	);
-
-	std::cout << "building with " << configuration << " and " << platform << std::endl;
-	system(command_build.c_str());
+	ofs << command_build;
+	ofs << console(command_build.c_str());
+	std::cout << "done" << std::endl;
 
 }
 
@@ -114,7 +118,6 @@ void move_result(const filesystem::path& path_root)
 		break;
 	default:
 		throw std::exception("unknown configuration");
-		break;
 	}
 
 }
@@ -126,40 +129,57 @@ void library_googletest(void)
 				<< "| Start of Google Test Library ----------|\n"
 				<< "+----------------------------------------+" << std::endl;
 
-	bool do_build;
+	filesystem::path googletest(find_libraries() / "googletest");
 
-	filesystem::path googletest(find_libraries()/"googletest");
-	std::cout << "The path is assumed to be: " << googletest.string() << std::endl;
-	
-	if(!filesystem::exists(find_output() / "gtestd.lib"))
+	auto timestamp_git_last_update(get_timestamp(find_intermediate()/"library_googletest.timestamp"));
+	auto git_update_delta(std::chrono::system_clock::now()-timestamp_git_last_update);
+	std::cout << "git repository was updated ";
+	if(git_update_delta < std::chrono::hours(1))
 	{
-		std::cout << "The binaries could not be found and therefore needs to be built" << std::endl;
-		do_build = true;
-	}
-	else if(
-		git_prepare(
-			googletest, 
-			"library_googletest.timestamp",				// todo convert into timepoint
-			"https://github.com/google/googletest.git"
-		)
-	)
-	{
-
-		auto master_timestamp(git_timestamp(googletest));
-		auto output_timestamp(filesystem::last_write_time(find_output() / "gtestd.lib"));
-		do_build = master_timestamp > output_timestamp;
-		if(do_build)
-		{
-			std::cout << "The binaries are out-of-date and needs to be rebuilt" << std::endl;
-		}
-		else
-		{
-			std::cout << "The binaries are up-to-date and does not need to be rebuilt" << std::endl;
-		}
-
+		std::cout	<< std::chrono::duration_cast<std::chrono::minutes>(git_update_delta).count()
+					<< " minutes ago" << std::endl;
 	}
 	else
 	{
+		std::cout	<< std::chrono::duration_cast<std::chrono::hours>(git_update_delta).count()
+					<< " hours ago" << std::endl;
+		if(git_update_delta > std::chrono::hours(24))
+		{
+			git_ensure_up_to_date(
+				googletest,
+				"https://github.com/google/googletest.git"
+			);
+		}
+	}
+	
+	bool do_build;
+
+	filesystem::path binary_file;
+	switch(get_configuration())
+	{
+	case configuration::debug:
+		binary_file = find_output()/"gtestd.lib";
+		break;
+	case configuration::release:
+		binary_file = find_output()/"gtest.lib";
+		break;
+	default:
+		throw std::exception("unknown configuration");
+	}
+
+	if(!filesystem::exists(binary_file))
+	{
+		std::cout << "The binaries could not be found" << std::endl;
+		do_build = true;
+	}
+	else if(git_get_time_of_latest_commit(googletest)>filesystem::last_write_time(binary_file))
+	{
+		std::cout << "The binaries are out-of-date" << std::endl;
+		do_build = true;
+	}
+	else
+	{
+		std::cout << "The binaries are up-to-date" << std::endl;
 		do_build = false;
 	}
 
@@ -169,15 +189,13 @@ void library_googletest(void)
 		switch(get_os())
 		{
 		case os::windows:
-			std::cout << "Rebuilding with msbuild" << std::endl;
 			build_vs(googletest);
 			break;
 		case os::linux:
-			std::cout << "Rebuilding with make" << std::endl;
 			build_make(googletest);
 			break;
 		default:
-			break;
+			throw std::exception("unknown os");
 		}
 
 		move_result(googletest);

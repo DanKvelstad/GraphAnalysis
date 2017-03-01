@@ -58,7 +58,7 @@ filesystem::path find_output(void)
 
 	if(!filesystem::exists(path))
 	{
-		throw std::exception("could not find intermediate folder");
+		filesystem::create_directories(path);
 	}
 
 	return path;
@@ -103,7 +103,7 @@ filesystem::path find_intermediate(void)
 
 	if(!filesystem::exists(path))
 	{
-		throw std::exception("could not find intermediate folder");
+		filesystem::create_directories(path);
 	}
 
 	return path;

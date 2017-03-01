@@ -10,7 +10,7 @@
 
 using namespace std::experimental;
 
-std::chrono::system_clock::time_point git_timestamp(filesystem::path root)
+std::chrono::system_clock::time_point git_get_time_of_latest_commit(filesystem::path root)
 {
 
 	auto string(
@@ -28,24 +28,14 @@ std::chrono::system_clock::time_point git_timestamp(filesystem::path root)
 
 }
 
-bool git_prepare(
-	const filesystem::path&	path, 
-	std::string				timestamp,
-	std::string				address
-)
+bool git_ensure_up_to_date(const filesystem::path& path, std::string address)
 {
 
-	bool repo_changed;
+	bool updated;
 
-	if(!is_timestamp_expired(timestamp))
-	{
-		std::cout << "Git repository was checked within the last 24h, will not check it again" << std::endl;
-		repo_changed = false;
-	}
-	else if(filesystem::exists(path /".git"))
+	if(filesystem::exists(path /".git"))
 	{
 
-		std::cout << "The local library has not been compared to the git repo in the last 24h" << std::endl;
 		std::cout << "Now reseting the local workspace... ";
 
 		std::string command_reset(
@@ -54,7 +44,7 @@ bool git_prepare(
 			"git checkout ."		+ "&&" +
 			"git clean -fdx"
 		);
-		system(command_reset.c_str());
+		std::string response_reset(console(command_reset.c_str()));
 		std::cout << "done" << std::endl;
 
 		std::cout << "Now pulling from the the repo... ";
@@ -62,9 +52,9 @@ bool git_prepare(
 			"cd " + path.string() + "&&"
 			"git pull"
 		);
-		std::string response(console(command_pull.c_str()));
+		std::string response_update(console(command_pull.c_str()));
 		std::cout << "done" << std::endl;
-		repo_changed = ("Already up-to-date." == response);
+		updated = ("Already up-to-date." == response_update);
 		
 	}
 	else
@@ -78,10 +68,10 @@ bool git_prepare(
 		auto response(console(command_clone.c_str()));
 		std::cout << std::endl;
 
-		repo_changed = true;
+		updated = true;
 
 	}
 
-	return repo_changed;
+	return updated;
 
 }

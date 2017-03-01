@@ -3,10 +3,6 @@
 
 using namespace std::experimental;
 
-std::chrono::system_clock::time_point git_timestamp(filesystem::path root);
+std::chrono::system_clock::time_point git_get_time_of_latest_commit(filesystem::path root);
 
-bool git_prepare(
-	const filesystem::path&	path, 
-	std::string				timestamp,
-	std::string				address
-);
+bool git_ensure_up_to_date(const filesystem::path& path, std::string address);

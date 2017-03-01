@@ -4,6 +4,31 @@
 
 using namespace std::chrono_literals;
 
+std::chrono::system_clock::time_point get_timestamp(filesystem::path file)
+{
+
+	std::chrono::system_clock::time_point time_point;
+
+	if(filesystem::exists(file))
+	{
+		std::ifstream stream(file);
+		long long count;
+		stream >> count;
+		time_point = std::chrono::system_clock::time_point(
+			std::chrono::system_clock::duration(count)
+		);
+	}
+	else
+	{
+		time_point = std::chrono::system_clock::time_point(
+			std::chrono::system_clock::duration(0)
+		);
+	}
+
+	return time_point;
+
+}
+
 bool is_timestamp_expired(std::string id)
 {
 
