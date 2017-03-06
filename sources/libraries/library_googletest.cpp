@@ -78,6 +78,16 @@ void build_vs(const filesystem::path& path_root)
 void build_make(const filesystem::path& path_root)
 {
 
+	auto path_msvc(path_root / "googletest" / "make");
+
+	std::string command_make("cd "+(path_msvc).string() + "&&make");
+	console(command_make.c_str());
+
+	std::string command_move("mv " + (path_msvc/"gtest*.o").string() + " " +path_to_output().string());
+	console(command_move.c_str());
+
+
+
 }
 
 void move_result(const filesystem::path& path_root)
