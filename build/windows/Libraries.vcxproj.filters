@@ -5,11 +5,8 @@
     <ClCompile Include="..\..\sources\libraries\library_googletest.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sources\libraries\find.cpp">
-      <Filter>filesystem</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\sources\libraries\timestamp.cpp">
-      <Filter>filesystem</Filter>
+      <Filter>files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sources\libraries\msbuild.cpp">
       <Filter>build support</Filter>
@@ -20,16 +17,19 @@
     <ClCompile Include="..\..\sources\libraries\os.cpp">
       <Filter>build support</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\paths.cpp">
+      <Filter>files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="libraries">
       <UniqueIdentifier>{62cc4110-d30f-4758-846c-f7e1a6e88b77}</UniqueIdentifier>
     </Filter>
-    <Filter Include="filesystem">
-      <UniqueIdentifier>{f06853e1-9545-4cd1-8c19-884d23a0f874}</UniqueIdentifier>
-    </Filter>
     <Filter Include="build support">
       <UniqueIdentifier>{77962b8e-e397-4231-9a50-3edf3d101f28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="files">
+      <UniqueIdentifier>{f06853e1-9545-4cd1-8c19-884d23a0f874}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,7 +37,7 @@
       <Filter>libraries</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sources\libraries\filesystem.h">
-      <Filter>filesystem</Filter>
+      <Filter>files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sources\libraries\msbuild.h">
       <Filter>build support</Filter>

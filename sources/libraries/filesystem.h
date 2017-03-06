@@ -1,14 +1,15 @@
 #pragma once
-#include <filesystem>
+#include <experimental/filesystem>
+#include <string>
 
 using namespace std::experimental;
 
 std::chrono::system_clock::time_point read_timestamp(filesystem::path file);
 void update_timestamp(filesystem::path file);
 
-filesystem::path find_output(void);
-filesystem::path find_timestamps(void);
-filesystem::path find_intermediate(void);
-filesystem::path find_libraries(void);
-std::string      find_msbuild(void);
-std::string      find_devenv(void);
+filesystem::path path_to_output(void);
+filesystem::path path_to_timestamps(void);
+filesystem::path path_to_intermediate(void);
+filesystem::path path_to_libraries(void);
+std::string      path_to_msbuild(void);
+std::string      path_to_devenv(void);

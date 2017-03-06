@@ -1,11 +1,11 @@
 #include "filesystem.h"
 #include "os.h"
 #include <regex>
-#include <filesystem>
+#include <experimental/filesystem>
 
 using namespace std::experimental;
 
-filesystem::path find_root(void)
+filesystem::path path_to_root(void)
 {
 
 	auto path(filesystem::current_path());
@@ -14,22 +14,22 @@ filesystem::path find_root(void)
 		path = path.parent_path();
 		if(path.empty())
 		{
-			throw std::exception("could not find intermediate folder");
+			throw std::logic_error("could not find intermediate folder");
 		}
 	}
 	return path;
 	
 }
 
-filesystem::path find_timestamps(void)
+filesystem::path path_to_timestamps(void)
 {
-	return find_root()/"intermediate";
+	return path_to_root()/"intermediate";
 }
 
-filesystem::path find_output(void)
+filesystem::path path_to_output(void)
 {
 
-	auto path(find_root() / "binaries");
+	auto path(path_to_root() / "binaries");
 	
 	std::string configuration;
 	switch(get_configuration())
@@ -41,7 +41,7 @@ filesystem::path find_output(void)
 		configuration = "Release";
 		break;
 	default:
-		throw std::exception("unknown configuration");
+		throw std::logic_error("unknown configuration");
 		break;
 	}
 
@@ -55,7 +55,7 @@ filesystem::path find_output(void)
 		platform = "x64";
 		break;
 	default:
-		throw std::exception("unknown platform");
+		throw std::logic_error("unknown platform");
 		break;
 	}
 
@@ -70,10 +70,10 @@ filesystem::path find_output(void)
 
 }
 
-filesystem::path find_intermediate(void)
+filesystem::path path_to_intermediate(void)
 {
 
-	auto path(find_root()/"intermediate");
+	auto path(path_to_root()/"intermediate");
 	
 	std::string configuration;
 	switch(get_configuration())
@@ -85,7 +85,7 @@ filesystem::path find_intermediate(void)
 		configuration = "Release";
 		break;
 	default:
-		throw std::exception("unknown configuration");
+		throw std::logic_error("unknown configuration");
 		break;
 	}
 
@@ -99,7 +99,7 @@ filesystem::path find_intermediate(void)
 		platform = "x64";
 		break;
 	default:
-		throw std::exception("unknown platform");
+		throw std::logic_error("unknown platform");
 		break;
 	}
 
@@ -115,12 +115,12 @@ filesystem::path find_intermediate(void)
 
 }
 
-filesystem::path find_libraries(void)
+filesystem::path path_to_libraries(void)
 {
-	return find_root()/"libraries";
+	return path_to_root()/"libraries";
 }
 
-std::string find_msbuild(void)
+std::string path_to_msbuild(void)
 {
 
 	auto path_msbuild_garbled(
@@ -137,14 +137,14 @@ std::string find_msbuild(void)
 	
 	if(!filesystem::exists(msbuild))
 	{
-		throw std::exception("msbuild not found");
+		throw std::logic_error("msbuild not found");
 	}
 
 	return "\"" + msbuild.string() + "\"";
 	
 }
 
-std::string find_devenv(void)
+std::string path_to_devenv(void)
 {
 		
 	auto path_msbuild_garbled(
@@ -160,7 +160,7 @@ std::string find_devenv(void)
 	
 	if(!filesystem::exists(msbuild))
 	{
-		throw std::exception("devenv not found");
+		throw std::logic_error("devenv not found");
 	}
 
 	return "\"" + msbuild.string() + "\"";

@@ -22,7 +22,7 @@
     <ClCompile Include="..\..\sources\libraries\git.cpp" />
     <ClCompile Include="..\..\sources\libraries\msbuild.cpp" />
     <ClCompile Include="..\..\sources\libraries\os.cpp" />
-    <ClCompile Include="..\..\sources\libraries\find.cpp" />
+    <ClCompile Include="..\..\sources\libraries\paths.cpp" />
     <ClCompile Include="..\..\sources\libraries\library_googletest.cpp" />
     <ClCompile Include="..\..\sources\libraries\main.cpp" />
     <ClCompile Include="..\..\sources\libraries\timestamp.cpp" />

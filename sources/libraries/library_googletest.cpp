@@ -19,11 +19,11 @@ void build_vs(const filesystem::path& path_root)
 
 	auto path_msvc(path_root / "googletest" / "msvc");
 
-	std::ofstream ofs(find_intermediate()/"library_googletest.log");
+	std::ofstream ofs(path_to_intermediate()/"library_googletest.log");
 
 	std::cout << "upgrading the solution... ";
 	std::cout.flush();
-	std::string command_upgrade(find_devenv() + " " + (path_msvc / "gtest.sln").string() + " /upgrade");
+	std::string command_upgrade(path_to_devenv() + " " + (path_msvc / "gtest.sln").string() + " /upgrade");
 	ofs << command_upgrade << std::endl;
 	ofs << console(command_upgrade.c_str());
 	std::cout << "done" << std::endl;
@@ -47,7 +47,7 @@ void build_vs(const filesystem::path& path_root)
 		configuration = " /p:Configuration=Release";
 		break;
 	default:
-		throw std::exception("unknown configuration");
+		throw std::logic_error("unknown configuration");
 	}
 
 	std::string platform;
@@ -60,14 +60,14 @@ void build_vs(const filesystem::path& path_root)
 		platform = " /p:Platform=x64";
 		break;
 	default:
-		throw std::exception("unknown platform");
+		throw std::logic_error("unknown platform");
 	}
 
 	std::cout << "building solution... ";
 	std::cout.flush();
 	std::string command_build(
 		"cd " + (path_root / "googletest" / "msvc").string() + "&&" +
-		find_msbuild() + " gtest.sln /t:Build" + configuration + platform
+		path_to_msbuild() + " gtest.sln /t:Build" + configuration + platform
 	);
 	ofs << command_build;
 	ofs << console(command_build.c_str());
@@ -94,12 +94,12 @@ void move_result(const filesystem::path& path_root)
 		output /= "Debug";
 		filesystem::copy_file(
 			output/"gtestd.lib",
-			find_output()/"gtestd.lib",
+			path_to_output()/"gtestd.lib",
 			filesystem::copy_options::overwrite_existing
 		);
 		filesystem::copy_file(
 			output/"gtest_maind.lib",
-			find_output()/"gtest_maind.lib",
+			path_to_output()/"gtest_maind.lib",
 			filesystem::copy_options::overwrite_existing
 		);
 		break;
@@ -107,17 +107,17 @@ void move_result(const filesystem::path& path_root)
 		output /= "Release";
 		filesystem::copy_file(
 			output / "gtest.lib",
-			find_output() / "gtest.lib",
+			path_to_output() / "gtest.lib",
 			filesystem::copy_options::overwrite_existing
 		);
 		filesystem::copy_file(
 			output / "gtest_main.lib",
-			find_output() / "gtest_main.lib",
+			path_to_output() / "gtest_main.lib",
 			filesystem::copy_options::overwrite_existing
 		);
 		break;
 	default:
-		throw std::exception("unknown configuration");
+		throw std::logic_error("unknown configuration");
 	}
 
 }
@@ -129,9 +129,9 @@ void library_googletest(void)
 				<< "| Start of Google Test Library ----------|\n"
 				<< "+----------------------------------------+" << std::endl;
 
-	filesystem::path googletest(find_libraries() / "googletest");
+	filesystem::path googletest(path_to_libraries() / "googletest");
 
-	auto timestamp_git_last_update(read_timestamp(find_timestamps()/"googletest.timestamp"));
+	auto timestamp_git_last_update(read_timestamp(path_to_timestamps()/"googletest.timestamp"));
 	auto git_update_delta(std::chrono::system_clock::now()-timestamp_git_last_update);
 	std::cout << "git repository was updated ";
 	if(git_update_delta < std::chrono::hours(1))
@@ -149,7 +149,7 @@ void library_googletest(void)
 				googletest,
 				"https://github.com/google/googletest.git"
 			);
-			update_timestamp(find_timestamps() /"googletest.timestamp");
+			update_timestamp(path_to_timestamps() /"googletest.timestamp");
 		}
 	}
 	
@@ -159,13 +159,13 @@ void library_googletest(void)
 	switch(get_configuration())
 	{
 	case configuration::debug:
-		binary_file = find_output()/"gtestd.lib";
+		binary_file = path_to_output()/"gtestd.lib";
 		break;
 	case configuration::release:
-		binary_file = find_output()/"gtest.lib";
+		binary_file = path_to_output()/"gtest.lib";
 		break;
 	default:
-		throw std::exception("unknown configuration");
+		throw std::logic_error("unknown configuration");
 	}
 
 	if(!filesystem::exists(binary_file))
@@ -196,7 +196,7 @@ void library_googletest(void)
 			build_make(googletest);
 			break;
 		default:
-			throw std::exception("unknown os");
+			throw std::logic_error("unknown os");
 		}
 
 		move_result(googletest);
