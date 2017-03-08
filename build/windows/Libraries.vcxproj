@@ -19,7 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\sources\libraries\files.cpp" />
+    <ClCompile Include="..\..\sources\libraries\files_linux.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\files_windows.cpp" />
     <ClCompile Include="..\..\sources\libraries\git.cpp" />
+    <ClCompile Include="..\..\sources\libraries\library_googletest_linux.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\library_googletest_windows.cpp" />
     <ClCompile Include="..\..\sources\libraries\msbuild.cpp" />
     <ClCompile Include="..\..\sources\libraries\os.cpp" />
     <ClCompile Include="..\..\sources\libraries\paths.cpp" />
@@ -28,7 +43,7 @@
     <ClCompile Include="..\..\sources\libraries\timestamp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\sources\libraries\filesystem.h" />
+    <ClInclude Include="..\..\sources\libraries\files.h" />
     <ClInclude Include="..\..\sources\libraries\git.h" />
     <ClInclude Include="..\..\sources\libraries\libraries.h" />
     <ClInclude Include="..\..\sources\libraries\msbuild.h" />
@@ -37,7 +52,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4BB7072A-1AED-4CE7-84AA-C3D56DF9B3BC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Libraries</RootNamespace>
+    <RootNamespace>libraries</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -93,22 +108,18 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup Condition="'$(Platform)'!='Win32'" Label="Configuration">
+    <OutDir>$(Root)intermediate\$(ProjectName)\windows $(Platform) $(Configuration)\binaries\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <OutDir>$(Root)intermediate\$(ProjectName)\windows x86 $(Configuration)\binaries\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup>
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)..\..\intermediate\Windows $(Platform) $(Configuration)\$(ProjectName)\binaries\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <TargetExt>.exe</TargetExt>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\..\intermediate\Windows $(Platform) $(Configuration)\$(ProjectName)\binaries\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -140,9 +151,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

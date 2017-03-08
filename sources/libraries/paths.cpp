@@ -1,4 +1,4 @@
-#include "filesystem.h"
+#include "files.h"
 #include "os.h"
 #include <regex>
 #include <experimental/filesystem>
@@ -23,44 +23,23 @@ filesystem::path path_to_root(void)
 
 filesystem::path path_to_timestamps(void)
 {
-	return path_to_root()/"intermediate";
+
+	auto path(path_to_root()/"intermediate"/"libraries"/"timestamps");
+
+	if(!filesystem::exists(path))
+	{
+		filesystem::create_directories(path);
+	}
+
+	return path;
+
 }
 
 filesystem::path path_to_output(void)
 {
 
-	auto path(path_to_root() / "binaries");
+	auto path(path_to_root()/"binaries"/build_directory());
 	
-	std::string configuration;
-	switch(get_configuration())
-	{
-	case configuration::debug:
-		configuration = "Debug";
-		break;
-	case configuration::release:
-		configuration = "Release";
-		break;
-	default:
-		throw std::logic_error("unknown configuration");
-		break;
-	}
-
-	std::string platform;
-	switch(get_platform())
-	{
-	case platform::x86:
-		platform = "Win32";
-		break;
-	case platform::x64:
-		platform = "x64";
-		break;
-	default:
-		throw std::logic_error("unknown platform");
-		break;
-	}
-
-	path /= ("Windows " + platform + " " + configuration);
-
 	if(!filesystem::exists(path))
 	{
 		filesystem::create_directories(path);
@@ -73,38 +52,21 @@ filesystem::path path_to_output(void)
 filesystem::path path_to_intermediate(void)
 {
 
-	auto path(path_to_root()/"intermediate");
+	auto path(path_to_root()/"intermediate"/"libraries"/build_directory());
 	
-	std::string configuration;
-	switch(get_configuration())
+	if(!filesystem::exists(path))
 	{
-	case configuration::debug:
-		configuration = "Debug";
-		break;
-	case configuration::release:
-		configuration = "Release";
-		break;
-	default:
-		throw std::logic_error("unknown configuration");
-		break;
+		filesystem::create_directories(path);
 	}
 
-	std::string platform;
-	switch(get_platform())
-	{
-	case platform::x86:
-		platform = "Win32";
-		break;
-	case platform::x64:
-		platform = "x64";
-		break;
-	default:
-		throw std::logic_error("unknown platform");
-		break;
-	}
+	return path;
 
-	path /= ("Windows " + platform + " " + configuration);
-	path /= "Libraries";
+}
+
+filesystem::path path_to_repositories(void)
+{
+
+	auto path(path_to_root() / "intermediate" / "libraries" / "repositories");
 
 	if(!filesystem::exists(path))
 	{
@@ -117,7 +79,30 @@ filesystem::path path_to_intermediate(void)
 
 filesystem::path path_to_libraries(void)
 {
-	return path_to_root()/"libraries";
+
+	auto path(path_to_root()/"libraries");
+
+	if(!filesystem::exists(path))
+	{
+		filesystem::create_directories(path);
+	}
+
+	return path;
+
+}
+
+filesystem::path path_to_library_includes(void)
+{
+
+	auto path(path_to_libraries()/"include");
+
+	if(!filesystem::exists(path))
+	{
+		filesystem::create_directories(path);
+	}
+
+	return path;
+
 }
 
 std::string path_to_msbuild(void)

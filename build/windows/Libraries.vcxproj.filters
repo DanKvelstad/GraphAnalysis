@@ -20,6 +20,21 @@
     <ClCompile Include="..\..\sources\libraries\paths.cpp">
       <Filter>files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\files.cpp">
+      <Filter>files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\files_linux.cpp">
+      <Filter>files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\files_windows.cpp">
+      <Filter>files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\library_googletest_windows.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\library_googletest_linux.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="libraries">
@@ -36,9 +51,6 @@
     <ClInclude Include="..\..\sources\libraries\libraries.h">
       <Filter>libraries</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sources\libraries\filesystem.h">
-      <Filter>files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\sources\libraries\msbuild.h">
       <Filter>build support</Filter>
     </ClInclude>
@@ -47,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="..\..\sources\libraries\os.h">
       <Filter>build support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\libraries\files.h">
+      <Filter>files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

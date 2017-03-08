@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test Suite", "Test Suite.vcxproj", "{6067C1EE-D429-41C5-9CD2-3EBA7D668798}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test suite", "test suite.vcxproj", "{6067C1EE-D429-41C5-9CD2-3EBA7D668798}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Analysis", "Analysis.vcxproj", "{C1F99296-16F1-4CAA-96EB-D2CFDEBB577C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "analysis", "analysis.vcxproj", "{C1F99296-16F1-4CAA-96EB-D2CFDEBB577C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Support", "Support.vcxproj", "{763F2171-6787-464F-96AE-7082220BEDA9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "support", "support.vcxproj", "{763F2171-6787-464F-96AE-7082220BEDA9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Libraries", "Libraries.vcxproj", "{4BB7072A-1AED-4CE7-84AA-C3D56DF9B3BC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libraries", "libraries.vcxproj", "{4BB7072A-1AED-4CE7-84AA-C3D56DF9B3BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

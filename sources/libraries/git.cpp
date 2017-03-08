@@ -1,4 +1,4 @@
-#include "filesystem.h"
+#include "files.h"
 #include "os.h"
 #include <experimental/filesystem>
 #include <fstream>
@@ -10,64 +10,113 @@
 
 using namespace std::experimental;
 
-std::chrono::system_clock::time_point git_get_time_of_latest_commit(filesystem::path root)
+//std::chrono::system_clock::time_point git_get_time_of_latest_commit(filesystem::path root)
+//{
+//
+//	auto string(
+//		console(
+//			"cd "+root.string()+"&&"+
+//			"git log -1 --date=raw --pretty=format:%cd"
+//		)
+//	);
+//	std::regex	regex("([0-9]+) ([-+][0-9]+)");
+//	std::smatch	smatch;
+//	std::regex_search(string, smatch, regex);
+//	return std::chrono::system_clock::time_point(
+//		std::chrono::seconds(std::stoi(smatch[1]))
+//	);
+//
+//}
+
+void git_reset(const filesystem::path& path)
 {
 
-	auto string(
-		console(
-			"cd "+root.string()+"&&"+
-			"git log -1 --date=raw --pretty=format:%cd"
-		)
+	std::cout << "now reseting the local workspace... ";
+
+	std::string command_reset(
+		"cd " + path.string() + "&&" +
+		"git reset" + "&&" +
+		"git checkout ." + "&&" +
+		"git clean -fdx"
 	);
-	std::regex	regex("([0-9]+) ([-+][0-9]+)");
-	std::smatch	smatch;
-	std::regex_search(string, smatch, regex);
-	return std::chrono::system_clock::time_point(
-		std::chrono::seconds(std::stoi(smatch[1]))
-	);
+	std::string response_reset(console(command_reset.c_str()));
+	std::cout << "done" << std::endl;
 
 }
 
-bool git_ensure_up_to_date(const filesystem::path& path, std::string address)
+bool git_pull(const filesystem::path& path)
+{
+
+	std::cout << "now pulling the repo... ";
+	std::string command(
+		"cd " + path.string() + "&&"
+		"git pull"
+	);
+	std::string response(console(command.c_str()));
+	std::cout << "done" << std::endl;
+	return ("Already up-to-date." == response);
+
+}
+
+void git_clone(const filesystem::path& path, std::string address)
+{
+
+	std::cout << "now cloning the repository... " << std::endl;
+
+	filesystem::remove_all(path);
+	std::string command_clone("git clone " + address + " " + path.string());
+	auto response(console(command_clone.c_str()));
+	std::cout << "done" << std::endl;
+
+}
+
+bool git_update(filesystem::path timestamp, filesystem::path local, std::string remote)
 {
 
 	bool updated;
 
-	if(filesystem::exists(path /".git"))
+	if(filesystem::exists(local / ".git"))
 	{
 
-		std::cout << "Now reseting the local workspace... ";
+		std::cout << "found the local workspace" << std::endl;
 
-		std::string command_reset(
-			"cd " + path.string()	+ "&&" +
-			"git reset"				+ "&&" +
-			"git checkout ."		+ "&&" +
-			"git clean -fdx"
+		auto git_timestamp_delta(
+			std::chrono::system_clock::now() -
+			read_timestamp(timestamp)
 		);
-		std::string response_reset(console(command_reset.c_str()));
-		std::cout << "done" << std::endl;
+		std::cout << "it was last updated ";
+		if(git_timestamp_delta < std::chrono::hours(1))
+		{
+			std::cout	<< std::chrono::duration_cast<std::chrono::minutes>(
+						      git_timestamp_delta
+						   ).count() << " minutes ago" << std::endl;
+		}
+		else
+		{
+			std::cout	<< std::chrono::duration_cast<std::chrono::hours>(
+						      git_timestamp_delta
+						   ).count() << " hours ago" << std::endl;
+		}
 
-		std::cout << "Now pulling from the the repo... ";
-		std::string command_pull(
-			"cd " + path.string() + "&&"
-			"git pull"
-		);
-		std::string response_update(console(command_pull.c_str()));
-		std::cout << "done" << std::endl;
-		updated = ("Already up-to-date." == response_update);
-		
+		git_reset(local);
+		if(git_timestamp_delta > std::chrono::hours(24))
+		{
+			updated = git_pull(local);
+			update_timestamp(timestamp);
+		}
+		else
+		{
+			updated = false;
+		}
+
+
 	}
 	else
 	{
 
-		std::cout << "Could not find the local workspace, will clone it now" << std::endl;
+		std::cout << "could not find the local workspace" << std::endl;
 
-		filesystem::remove_all(path);
-		std::string command_clone("git clone " + address + " " + path.string());
-		std::cout << command_clone << "... ";
-		auto response(console(command_clone.c_str()));
-		std::cout << std::endl;
-
+		git_clone(local, remote);
 		updated = true;
 
 	}
