@@ -1,22 +1,22 @@
-SRC            = $(ROOT)/sources/libraries
-INC            = -I$(SRC)
-INTERMEDIATE   = $(ROOT)/intermediate/Linux
-BINARIES       = $(ROOT)/binaries/Linux
-OUTPUT_OPTION  = -o $(INTERMEDIATE)/$@
-CPP_FILES     := $(wildcard $(SRC)/*.cpp)
-OBJ_FILES     := $(addprefix $(INTERMEDIATE)/,$(notdir $(CPP_FILES:.cpp=.o)))
+SRC_LIBRARIES := $(ROOT)/sources/libraries
+INC_LIBRARIES := -I$(SRC_LIBRARIES)
+INT_LIBRARIES := $(ROOT)/intermediate/libraries/linux
+BIN_LIBRARIES := $(INT_LIBRARIES)/binaries
+IGN_LIBRARIES := $(SRC_LIBRARIES)/files_windows.cpp $(SRC_LIBRARIES)/library_googletest_windows.cpp
+CPP_LIBRARIES := $(filter-out $(IGN_LIBRARIES),$(wildcard $(SRC_LIBRARIES)/*.cpp))
+OBJ_LIBRARIES := $(addprefix $(INT_LIBRARIES)/,$(notdir $(CPP_LIBRARIES:.cpp=.o)))
 
-all: $(OBJ_FILES) | $(BINARIES)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $(BINARIES)/libraries $(OBJ_FILES) -lstdc++fs
-	$(BINARIES)/libraries
+libraries: $(OBJ_LIBRARIES) | $(BIN_LIBRARIES)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $(BIN_LIBRARIES)/libraries $(OBJ_LIBRARIES) -lstdc++fs
+	$(BIN_LIBRARIES)/libraries
 	
-$(INTERMEDIATE)/%.o : $(SRC)/%.cpp
-	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
+$(INT_LIBRARIES)/%.o : $(SRC_LIBRARIES)/%.cpp
+	$(COMPILE.cpp) -o $@ $<
 
-$(OBJ_FILES): | $(INTERMEDIATE)
+$(OBJ_LIBRARIES): | $(INT_LIBRARIES)
 
-$(INTERMEDIATE):
-	mkdir $(INTERMEDIATE)
+$(INT_LIBRARIES):
+	mkdir -p $(INT_LIBRARIES)
 	
-$(BINARIES):
-	mkdir $(BINARIES)
+$(BIN_LIBRARIES):
+	mkdir -p $(BIN_LIBRARIES)

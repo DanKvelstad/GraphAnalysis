@@ -1,21 +1,16 @@
-SRC            = $(ROOT)/sources/testcases
-INC            = -I$(SRC) -I$(ROOT)/libraries/googletest/googletest/include -I$(ROOT)/sources
-INTERMEDIATE   = $(ROOT)/intermediate/Linux
-BINARIES       = $(ROOT)/binaries/Linux
-OUTPUT_OPTION  = -o $(INTERMEDIATE)/$@
-CPP_FILES     := $(wildcard $(SRC)/*.cpp)
-OBJ_FILES     := $(addprefix $(INTERMEDIATE)/,$(notdir $(CPP_FILES:.cpp=.o)))
+SRC_TEST_SUITE := $(ROOT)/sources/testcases
+INC_TEST_SUITE := -I$(SRC_TEST_SUITE) -I$(ROOT)/libraries/include -I$(ROOT)/sources
+INT_TEST_SUITE := $(ROOT)/intermediate/test_suite/linux
+CPP_TEST_SUITE := $(wildcard $(SRC_TEST_SUITE)/*.cpp)
+OBJ_TEST_SUITE := $(addprefix $(INT_TEST_SUITE)/,$(notdir $(CPP_TEST_SUITE:.cpp=.o)))
 
-all: $(OBJ_FILES) | $(BINARIES)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $(BINARIES)/test_suite $(BINARIES)/gtest-all.o $(BINARIES)/gtest_main.o $(OBJ_FILES) -lstdc++fs -L$(BINARIES) -l:support.so -pthread
+test_suite: $(OBJ_TEST_SUITE)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $(BINARIES)/test_suite $(LIB)/gtest-all.o $(LIB)/gtest_main.o $(OBJ_TEST_SUITE) -lstdc++fs -L$(BINARIES) -l:support.so -pthread
 
-$(INTERMEDIATE)/%.o : $(SRC)/%.cpp
-	$(COMPILE.cpp) $(INC) $(OUTPUT_OPTION) $<
+$(INT_TEST_SUITE)/%.o : $(SRC_TEST_SUITE)/%.cpp
+	$(COMPILE.cpp) $(INC_TEST_SUITE) -o $@ $<
 
-$(OBJ_FILES): | $(INTERMEDIATE)
+$(OBJ_TEST_SUITE): | $(INT_TEST_SUITE)
 
-$(INTERMEDIATE):
-	mkdir $(INTERMEDIATE)
-	
-$(BINARIES):
-	mkdir $(BINARIES)
+$(INT_TEST_SUITE):
+	mkdir -p $(INT_TEST_SUITE)

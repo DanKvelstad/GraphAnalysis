@@ -16,12 +16,12 @@ using namespace std::experimental;
 
 filesystem::path path_to_gtest_all(void)
 {
-	return path_to_output() / "gtest-all.o";
+	return path_to_libraries() / "linux" / "gtest-all.o";
 }
 
 filesystem::path path_to_gtest_main(void)
 {
-	return path_to_output() / "gtest_main.o";
+	return path_to_libraries() / "linux" / "gtest_main.o";
 }
 
 void build(const filesystem::path& path_root)
@@ -34,7 +34,7 @@ void build(const filesystem::path& path_root)
 
 	{
 		std::error_code error;
-		filesystem::rename(path_make / "gtest-all.o", path_to_output(), error);
+		filesystem::rename(path_make/"gtest-all.o", path_to_gtest_all(), error);
 		if(error)
 		{
 			throw std::logic_error(error.message());
@@ -43,11 +43,17 @@ void build(const filesystem::path& path_root)
 
 	{
 		std::error_code error;
-		filesystem::rename(path_make / "gtest_main.o", path_to_output(), error);
+		filesystem::rename(path_make/"gtest_main.o", path_to_gtest_main(), error);
 		if(error)
 		{
 			throw std::logic_error(error.message());
 		}
 	}
 
+}
+
+bool verify_output(void)
+{
+	return	filesystem::exists(path_to_gtest_all()) &&
+			filesystem::exists(path_to_gtest_main());
 }

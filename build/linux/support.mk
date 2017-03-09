@@ -1,21 +1,16 @@
-SRC            = $(ROOT)/sources/support
-INC            = -I$(SRC)
-INTERMEDIATE   = $(ROOT)/intermediate/Linux
-BINARIES       = $(ROOT)/binaries/Linux
-OUTPUT_OPTION  = -o $(INTERMEDIATE)/$@
-CPP_FILES     := $(wildcard $(SRC)/*.cpp)
-OBJ_FILES     := $(addprefix $(INTERMEDIATE)/,$(notdir $(CPP_FILES:.cpp=.o)))
+SRC_SUPPORT := $(ROOT)/sources/support
+INC_SUPPORT := -I$(SRC_SUPPORT)
+INT_SUPPORT := $(ROOT)/intermediate/support/linux
+CPP_SUPPORT := $(wildcard $(SRC_SUPPORT)/*.cpp)
+OBJ_SUPPORT := $(addprefix $(INT_SUPPORT)/,$(notdir $(CPP_SUPPORT:.cpp=.o)))
 
-all: $(OBJ_FILES) | $(BINARIES)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -o $(BINARIES)/support.so $(OBJ_FILES)
+support.so: $(OBJ_SUPPORT)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared -o $(BINARIES)/support.so $(OBJ_SUPPORT)
 
-$(INTERMEDIATE)/%.o : $(SRC)/%.cpp
-	$(COMPILE.cpp) -fPIC $(INC) $(OUTPUT_OPTION) $<
+$(INT_SUPPORT)/%.o : $(SRC_SUPPORT)/%.cpp
+	$(COMPILE.cpp) -fPIC $(INC_SUPPORT) -o $@ $<
 
-$(OBJ_FILES): | $(INTERMEDIATE)
+$(OBJ_SUPPORT): | $(INT_SUPPORT)
 
-$(INTERMEDIATE):
-	mkdir $(INTERMEDIATE)
-	
-$(BINARIES):
-	mkdir $(BINARIES)
+$(INT_SUPPORT):
+	mkdir -p $(INT_SUPPORT)
