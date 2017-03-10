@@ -13,8 +13,9 @@ filesystem::path path_to_intermediate(void);
 filesystem::path path_to_repositories(void);
 filesystem::path path_to_libraries(void);
 filesystem::path path_to_library_includes(void);
-std::string      path_to_msbuild(void);
-std::string      path_to_devenv(void);
+filesystem::path path_to_msbuild(void);
+filesystem::path path_to_devenv(void);
+filesystem::path path_to_cmake(void);
 
 std::string      build_directory(void);
 

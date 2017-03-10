@@ -40,96 +40,120 @@ filesystem::path path_to_gtest_main(void)
 
 }
 
-void move_result(const filesystem::path& path_to_workspace)
+void build(const filesystem::path& path_to_root)
 {
 
-	auto path_to_built_files = path_to_workspace / "googletest" / "msvc" / "gtest";
+	std::ofstream ofs(path_to_intermediate()/"googletest.log");
 	
-	switch(get_configuration())
+	// http://stackoverflow.com/a/9965141
+	std::string command_build("\"\"" + path_to_msbuild().string() + "\"");
+	
+	filesystem::path path_to_solution;
+	filesystem::path path_to_built;
+	auto devenv(path_to_devenv());
+	auto cmake(path_to_cmake());
+	if(!devenv.empty())
 	{
-	case configuration::debug:
-		path_to_built_files		/= "debug";
-		filesystem::rename(path_to_built_files / "gtestd.lib",		path_to_gtest_all());
-		filesystem::rename(path_to_built_files / "gtest_maind.lib",	path_to_gtest_main());
-		break;
-	case configuration::release:
-		path_to_built_files /= "release";
-		filesystem::rename(path_to_built_files / "gtest.lib",		path_to_gtest_all());
-		filesystem::rename(path_to_built_files / "gtest_main.lib",	path_to_gtest_main());
-		break;
-	default:
-		throw std::logic_error("unknown configuration");
+		std::cout << "upgrading the solution through devenv... ";
+		std::cout.flush();
+		path_to_solution = path_to_root / "googletest" / "msvc";
+		command_build += " \"" + (path_to_solution/"gtest.sln").string() + "\"";
+		switch (get_configuration())
+		{
+		case configuration::release:
+			path_to_built = path_to_solution / "release";
+			break;
+		case configuration::debug:
+			path_to_built = path_to_solution / "debug";
+			break;
+		default:
+			throw std::logic_error("unknown configuration");
+			break;
+		}
+		std::string command("\"" + devenv.string() + "\" " + (path_to_solution / "gtest.sln").string() + " /upgrade");
+		ofs << console(command) << std::endl << std::endl;
+		std::cout << "done" << std::endl;
 	}
-
-	auto path_to_library_includes(path_to_library_includes() / "gtest");
-	if(filesystem::exists(path_to_library_includes))
+	else if(!cmake.empty())
 	{
-		filesystem::remove_all(path_to_library_includes);
+		std::cout << "creating a new solution through cmake... ";
+		std::cout.flush();
+		path_to_solution = path_to_root / "googletest";
+		command_build += " \"" + (path_to_solution/"gtest.sln").string() + "\"";
+		switch (get_configuration())
+		{
+		case configuration::release:
+			path_to_built = path_to_solution / "Release";
+			break;
+		case configuration::debug:
+			path_to_built = path_to_solution / "Debug";
+			break;
+		default:
+			throw std::logic_error("unknown configuration");
+			break;
+		}
+		std::string command("cd \"" + (path_to_root/"googletest").string() + "\"&&\"" + cmake.string() + "\" .");
+		ofs << console(command) << std::endl << std::endl;
+		std::cout << "done" << std::endl;
 	}
-	filesystem::rename(path_to_workspace/"googletest"/"include"/"gtest", path_to_library_includes);
+	else
+	{
+		throw std::logic_error("cannot create a usable solution");
+	}
+	
+	command_build += " /t:Build";
 
-}
+	msbuild_ensure_platform(path_to_solution);
+	msbuild_change_runtime(path_to_solution);
+	msbuild_remove_project(path_to_solution, "gtest_unittest");
+	msbuild_remove_project(path_to_solution, "gtest_prod_test");
 
-void build(const filesystem::path& path_root)
-{
-
-	auto path_msvc(path_root / "googletest" / "msvc");
-
-	std::ofstream ofs(path_to_intermediate()/"libraries"/"googletest.log");
-
-	std::cout << "upgrading the solution... ";
+	std::cout << "building solution... ";
 	std::cout.flush();
-	std::string command_upgrade(path_to_devenv() + " " + (path_msvc / "gtest.sln").string() + " /upgrade");
-	ofs << command_upgrade << std::endl;
-	ofs << console(command_upgrade.c_str());
-	std::cout << "done" << std::endl;
 
-	if(platform::x64 == get_platform())
-	{
-		msbuild_convert_to_x64(path_msvc);
-	}
-
-	msbuild_change_runtime(path_msvc);
-	msbuild_remove_project(path_msvc, "gtest_unittest");
-	msbuild_remove_project(path_msvc, "gtest_prod_test");
-	
-	std::string configuration;
 	switch(get_configuration())
 	{
 	case configuration::debug:
-		configuration = " /p:Configuration=debug";
+		command_build += " /p:Configuration=debug";
 		break;
 	case configuration::release:
-		configuration = " /p:Configuration=release";
+		command_build += " /p:Configuration=release";
 		break;
 	default:
 		throw std::logic_error("unknown configuration");
 	}
 
-	std::string platform;
 	switch(get_platform())
 	{
 	case platform::x86:
-		platform = " /p:Platform=x86";
+		command_build += " /p:Platform=Win32";
 		break;
 	case platform::x64:
-		platform = " /p:Platform=x64";
+		command_build += " /p:Platform=x64";
 		break;
 	default:
 		throw std::logic_error("unknown platform");
 	}
 
-	std::cout << "building solution... ";
-	std::cout.flush();
-	std::string command_build(
-		"cd " + (path_root / "googletest" / "msvc").string() + "&&" +
-		path_to_msbuild() + " gtest.sln /t:Build" + configuration + platform
-	);
-	ofs << command_build;
-	ofs << console(command_build.c_str());
+	command_build += "\"";
+	ofs << command_build << std::endl;
+	ofs << console(command_build) << std::endl;
 	std::cout << "done" << std::endl;
 
-	move_result(path_root);
+	ofs.close();
+
+	std::error_code error;
+	filesystem::rename(path_to_built/"gtest.lib",		path_to_gtest_all(),	error);
+	filesystem::rename(path_to_built/"gtest_main.lib",	path_to_gtest_main(),	error);
+	filesystem::rename(path_to_built/"gtestd.lib",		path_to_gtest_all(),	error);
+	filesystem::rename(path_to_built/"gtest_maind.lib",	path_to_gtest_main(),	error);
+	
+	auto path_to_library_includes(path_to_library_includes() / "gtest");
+	if (filesystem::exists(path_to_library_includes))
+	{
+		filesystem::remove_all(path_to_library_includes);
+	}
+	filesystem::rename(path_to_root / "googletest" / "include" / "gtest", path_to_library_includes);
 
 }
 

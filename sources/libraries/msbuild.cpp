@@ -1,6 +1,7 @@
 #include <experimental/filesystem>
 #include <fstream>
 #include <algorithm>
+#include "os.h"
 
 using namespace std::experimental;
 
@@ -19,15 +20,9 @@ void msbuild_change_runtime(const filesystem::path& path_msvc)
 			std::ifstream is(path_old.string());
 			std::ofstream os(path_new.string());
 
-			std::string buffer(1024, '\0');
-			for(
-				is.getline(&buffer[0], buffer.size());
-				is;
-				is.getline(&buffer[0], buffer.size())
-			)
+			
+			for(std::string line; std::getline(is, line); )
 			{
-
-				std::string line(buffer.c_str());
 
 				if(std::string::npos != line.find("<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"))
 				{
@@ -43,16 +38,11 @@ void msbuild_change_runtime(const filesystem::path& path_msvc)
 				}
 				
 			}
-
+			
 			os.close();
 			is.close();
 
-			filesystem::copy_file(
-				path_new, 
-				path_old, 
-				filesystem::copy_options::overwrite_existing
-			);
-			filesystem::remove(path_new);
+			filesystem::rename(path_new, path_old);
 
 		}
 
@@ -60,8 +50,21 @@ void msbuild_change_runtime(const filesystem::path& path_msvc)
 
 }
 
-void msbuild_convert_to_x64(const filesystem::path& path_msvc)
+void msbuild_ensure_platform(const filesystem::path& path_msvc)
 {
+
+	std::string platform_string;
+	switch (get_platform())
+	{
+	case platform::x86:
+		platform_string = "Win32";
+		break;
+	case platform::x64:
+		platform_string = "x64";
+		break;
+	default:
+		throw std::logic_error("unknown platform");
+	}
 
 	for(auto& file : filesystem::directory_iterator(path_msvc))
 	{
@@ -76,27 +79,30 @@ void msbuild_convert_to_x64(const filesystem::path& path_msvc)
 			std::ifstream is(path_old.string());
 			std::ofstream os(path_new.string());
 
-			std::string buffer(1024, '\0');
-			for(
-				is.getline(&buffer[0], buffer.size());
-				is;
-				is.getline(&buffer[0], buffer.size())
-				)
+			for(std::string line; std::getline(is, line); )
 			{
-
-				std::string line(buffer.c_str());
-
-				std::string::size_type pos = 0u;
+				
+				std::string::size_type pos;
+				if (platform::x64 == get_platform())
+				{
+					pos = 0u;
+					while (std::string::npos != (pos = line.find("X86", pos)))
+					{
+						line.replace(pos, 3, "X64");
+						pos += 3;
+					}
+				}
+				pos = 0u;
 				while(std::string::npos  != (pos = line.find("Win32", pos)))
 				{
-					line.replace(pos, 5, "x64");
-					pos += 3;
+					line.replace(pos, 5, platform_string);
+					pos += platform_string.length();
 				}
 				pos = 0u;
 				while(std::string::npos != (pos = line.find("x86", pos)))
 				{
-					line.replace(pos, 3, "x64");
-					pos += 3;
+					line.replace(pos, 3, platform_string);
+					pos += platform_string.length();
 				}
 
 				os << line << "\n";
@@ -106,12 +112,7 @@ void msbuild_convert_to_x64(const filesystem::path& path_msvc)
 			os.close();
 			is.close();
 
-			filesystem::copy_file(
-				path_new,
-				path_old,
-				filesystem::copy_options::overwrite_existing
-			);
-			filesystem::remove(path_new);
+			filesystem::rename(path_new, path_old);
 
 		}
 
@@ -136,15 +137,8 @@ void msbuild_remove_project(const filesystem::path& path_msvc, std::string proje
 			std::ofstream os(path_new.string());
 
 			bool delete_this_line(false);
-			std::string buffer(1024, '\0');
-			for(
-				is.getline(&buffer[0], buffer.size());
-				is;
-				is.getline(&buffer[0], buffer.size())
-				)
+			for (std::string line; std::getline(is, line); )
 			{
-
-				std::string line(buffer.c_str());
 
 				if(delete_this_line)
 				{
@@ -164,12 +158,7 @@ void msbuild_remove_project(const filesystem::path& path_msvc, std::string proje
 			os.close();
 			is.close();
 
-			filesystem::copy_file(
-				path_new,
-				path_old,
-				filesystem::copy_options::overwrite_existing
-			);
-			filesystem::remove(path_new);
+			filesystem::rename(path_new, path_old);
 
 		}
 

@@ -43,14 +43,28 @@ platform get_platform(void)
 
 std::string console(const std::string& cmd)
 {
-	std::array<char, 128> buffer;
-	std::string result;
-	std::shared_ptr<FILE> pipe(POPEN(cmd.c_str(), "r"), PCLOSE);
-	if(!pipe) throw std::runtime_error("popen() failed!");
-	while(!feof(pipe.get()))
+
+	std::shared_ptr<FILE> pipe(
+		POPEN(cmd.c_str(), "rt"), 
+		PCLOSE
+	);
+	if (!pipe)
 	{
-		if(fgets(buffer.data(), 128, pipe.get()) != NULL)
-			result += buffer.data();
+		throw std::runtime_error("popen failed");
 	}
+
+	std::string result;
+	for (
+		std::array<char, 128> buffer;
+		buffer.data()==fgets(buffer.data(), static_cast<int>(buffer.size()), pipe.get());
+		result += buffer.data()
+	);
+
+	if (!feof(pipe.get()))
+	{
+		throw std::logic_error("failed to read the pipe to the end.");
+	}
+
 	return result;
+
 }
