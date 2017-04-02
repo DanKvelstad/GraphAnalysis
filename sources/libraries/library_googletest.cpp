@@ -37,7 +37,7 @@ void library_googletest(void)
 		std::cout << "building the binaries due to an updated workspace" << std::endl;
 		build(path_to_workspace);
 	}
-	if(!verify_output())
+	else if(!verify_output())
 	{
 		std::cout << "building the binaries because they were not found" << std::endl;
 		build(path_to_workspace);

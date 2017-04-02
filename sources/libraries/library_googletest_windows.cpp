@@ -61,10 +61,10 @@ void build(const filesystem::path& path_to_root)
 		switch (get_configuration())
 		{
 		case configuration::release:
-			path_to_built = path_to_solution / "release";
+			path_to_built = path_to_solution / "gtest" / "release";
 			break;
 		case configuration::debug:
-			path_to_built = path_to_solution / "debug";
+			path_to_built = path_to_solution / "gtest" / "debug";
 			break;
 		default:
 			throw std::logic_error("unknown configuration");
