@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <ImportGroup Label="PropertySheets" />
+  
+  <PropertyGroup Label="UserMacros">
+    <Root>$(SolutionDir)..\..\</Root>
+  </PropertyGroup>
+  <ItemGroup>
+    <BuildMacro Include="Root">
+      <Value>$(Root)</Value>
+    </BuildMacro>
+  </ItemGroup>
+  
+  <PropertyGroup Condition="'$(Platform)'!='Win32'" Label="Configuration">
+    <OutDir>$(Root)binaries\windows $(Platform) $(Configuration)\</OutDir>
+    <IntDir>$(Root)intermediate\$(ProjectName)\windows $(Platform) $(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <OutDir>$(Root)binaries\windows x86 $(Configuration)\</OutDir>
+    <IntDir>$(Root)intermediate\$(ProjectName)\windows x86 $(Configuration)\</IntDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <BuildLog>
+      <Path>$(IntDir)$(MSBuildProjectName).log</Path>
+    </BuildLog>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(Root)sources\;$(Root)libraries\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Platform)'!='Win32'" Label="Configuration">
+    <Link>
+      <AdditionalLibraryDirectories>$(Root)libraries\windows $(Platform) $(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <Link>
+      <AdditionalLibraryDirectories>$(Root)libraries\windows x86 $(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  
+  </Project>

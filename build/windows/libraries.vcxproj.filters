@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\sources\libraries\main.cpp" />
+    <ClCompile Include="..\..\sources\libraries\library_googletest.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\timestamp.cpp">
+      <Filter>files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\msbuild.cpp">
+      <Filter>build support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\git.cpp">
+      <Filter>build support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\os.cpp">
+      <Filter>build support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\paths.cpp">
+      <Filter>files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\files.cpp">
+      <Filter>files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\files_linux.cpp">
+      <Filter>files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\files_windows.cpp">
+      <Filter>files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\library_googletest_windows.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\libraries\library_googletest_linux.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="libraries">
+      <UniqueIdentifier>{62cc4110-d30f-4758-846c-f7e1a6e88b77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="build support">
+      <UniqueIdentifier>{77962b8e-e397-4231-9a50-3edf3d101f28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="files">
+      <UniqueIdentifier>{f06853e1-9545-4cd1-8c19-884d23a0f874}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\sources\libraries\libraries.h">
+      <Filter>libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\libraries\msbuild.h">
+      <Filter>build support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\libraries\git.h">
+      <Filter>build support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\libraries\os.h">
+      <Filter>build support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\libraries\files.h">
+      <Filter>files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

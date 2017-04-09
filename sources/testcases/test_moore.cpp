@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
-#include <queue>
+#include "gtest/gtest.h"
 #include "graphs/moore.h"
+#include <queue>
 
 enum class state
 {

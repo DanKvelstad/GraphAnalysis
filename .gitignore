@@ -1,6 +1,7 @@
 # Compiled files
-binaries/
-intermediate/
+/binaries/
+/intermediate/
+/libraries/
 
 # Build directory
 .vs/

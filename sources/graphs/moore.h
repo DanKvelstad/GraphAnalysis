@@ -3,6 +3,7 @@
 #include <mutex>
 #include <map>
 #include <functional>
+#include <stdexcept>
 
 template<class state_type, class event_type>
 class moore
@@ -48,11 +49,11 @@ private:
 
 			if(auto_edge.first)
 			{
-				throw std::exception("Cannot add a second auto edge");
+				throw std::logic_error("Cannot add a second auto edge");
 			}
 			else if(!event_edges.empty())
 			{
-				throw std::exception("Cannot insert an auto edge, there are event edges");
+				throw std::logic_error("Cannot insert an auto edge, there are event edges");
 			}
 			else
 			{
@@ -67,11 +68,11 @@ private:
 
 			if(auto_edge.first)
 			{
-				throw std::exception("Cannot add an event edge, there was a auto edge");
+				throw std::logic_error("Cannot add an event edge, there was a auto edge");
 			}
 			else if(!event_edges.insert(std::make_pair(event, target_state)).second)
 			{
-				throw std::exception("The event is already associated with an edge");
+				throw std::logic_error("The event is already associated with an edge");
 			}
 
 		}
@@ -82,7 +83,7 @@ private:
 			auto edge(event_edges.find(event));
 			if(event_edges.end() == edge)
 			{
-				throw std::exception("There is no edge for that event");
+				throw std::logic_error("There is no edge for that event");
 			}
 
 			return edge->second;
@@ -127,7 +128,7 @@ public:
 		
 		if(!states.insert(std::make_pair(new_state, internal_state(callback))).second)
 		{
-			throw std::exception("Could not add state");
+			throw std::logic_error("Could not add state");
 		}
 
 	}
@@ -140,13 +141,13 @@ public:
 		auto found_source_state(states.find(desired_source_state));
 		if(states.end() == found_source_state)
 		{
-			throw std::exception("Source state must be added before the edge");
+			throw std::logic_error("Source state must be added before the edge");
 		}
 
 		auto found_target_state(states.find(desired_target_state));
 		if(states.end() == found_target_state)
 		{
-			throw std::exception("Target state must be added before the edge");
+			throw std::logic_error("Target state must be added before the edge");
 		}
 
 		found_source_state->second.make_edge(desired_target_state);
@@ -161,13 +162,13 @@ public:
 		auto found_source_state(states.find(desired_source_state));
 		if(states.end() == found_source_state)
 		{
-			throw std::exception("Source state must be added before the edge");
+			throw std::logic_error("Source state must be added before the edge");
 		}
 
 		auto found_target_state(states.find(desired_target_state));
 		if(states.end() == found_target_state)
 		{
-			throw std::exception("Target state must be added before the edge");
+			throw std::logic_error("Target state must be added before the edge");
 		}
 
 		found_source_state->second.make_edge(event, desired_target_state);
@@ -182,7 +183,7 @@ public:
 		auto found_state(states.find(current_state));
 		if(states.end() == found_state)
 		{
-			throw std::exception("Source state must be added before the edge");
+			throw std::logic_error("Source state must be added before the edge");
 		}
 		else
 		{
@@ -199,7 +200,7 @@ private:
 		auto desired_state_it(states.find(desired_state));
 		if(states.end() == desired_state_it)
 		{
-			throw std::exception("Internal Error! Attempting to set invalid state");
+			throw std::logic_error("Internal Error! Attempting to set invalid state");
 		}
 
 		current_state = desired_state_it->first;
