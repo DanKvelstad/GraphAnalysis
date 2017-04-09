@@ -26,7 +26,7 @@
       <Path>$(IntDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(Root)sources\;$(Root)libraries\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(Root)sources\;$(Root)libraries\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <WarningLevel>EnableAllWarnings</WarningLevel>
     </ClCompile>
@@ -34,7 +34,7 @@
 
   <ItemDefinitionGroup Condition="'$(Platform)'!='Win32'" Label="Configuration">
     <Link>
-      <AdditionalLibraryDirectories>$(Root)libraries\windows $(Platform) $(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(Root)libraries\windows x64 $(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">

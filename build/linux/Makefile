@@ -5,7 +5,7 @@ LIB      := $(ROOT)/libraries/linux
 BINARIES := $(ROOT)/binaries/linux
 	
 # Build programs, libraries, documentation, etc. (same as make).
-all: libraries support.so test_suite | $(BINARIES)
+all: support.so test_suite | $(BINARIES)
 
 # Install what needs to be installed, copying the files from the package’s tree to system-wide directories.
 install:
@@ -34,6 +34,5 @@ dist:
 $(BINARIES):
 	mkdir -p $(BINARIES)
 
-include libraries.mk
 include support.mk
 include test_suite.mk
