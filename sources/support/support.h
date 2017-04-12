@@ -2,6 +2,9 @@
 
 #include <vector>
 #include <string>
+#include <experimental/filesystem>
+
+using namespace std::experimental::filesystem::v1;
 
 #ifdef _WIN32 
 #	if PROJECT_SUPPORT
@@ -12,6 +15,9 @@
 #else
 #	define DLLEXPORT	
 #endif
+
+DLLEXPORT std::vector<path> search_for_files_with_extension(const path& working_folder, std::vector<std::string> extensions);
+DLLEXPORT std::string file_to_string(const path& file);
 
 typedef struct 
 {
