@@ -85,6 +85,11 @@ int main(int argc, char* argv[])
 		{
 			std::cout << "       " << edge << std::endl;
 		}
+		std::cout << "Transitions" << std::endl;
+		for (auto& transition : find_transitions(content, result.second))
+		{
+			std::cout << "       " << transition.from << ":" << transition.ev << ":" << transition.to << std::endl;
+		}
 
 	}
 
