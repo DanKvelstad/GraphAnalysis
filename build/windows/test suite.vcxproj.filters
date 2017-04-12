@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\..\sources\testcases\test_moore.cpp" />
-    <ClCompile Include="..\..\sources\testcases\test_libraries.cpp" />
     <ClCompile Include="..\..\sources\testcases\test_analysis.cpp" />
   </ItemGroup>
 </Project>

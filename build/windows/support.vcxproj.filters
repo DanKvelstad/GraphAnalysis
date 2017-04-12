@@ -4,6 +4,6 @@
     <ClInclude Include="..\..\sources\support\support.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\sources\support\parse_file.cpp" />
+    <ClCompile Include="..\..\sources\support\support.cpp" />
   </ItemGroup>
 </Project>

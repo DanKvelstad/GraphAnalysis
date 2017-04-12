@@ -150,7 +150,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\sources\support\parse_file.cpp" />
+    <ClCompile Include="..\..\sources\support\support.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\sources\support\support.h" />
