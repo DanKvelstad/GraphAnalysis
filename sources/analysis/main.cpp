@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <layouter\layouters.h>
+#include <map>
 
 using namespace std::experimental::filesystem::v1;
 
@@ -76,19 +78,69 @@ int main(int argc, char* argv[])
 		std::cout << "Name   " << result.second.variable	<< std::endl;
 		std::cout << "File   " << result.first				<< std::endl;
 		std::cout << "States " << result.second.states		<< std::endl;
-		for (auto& state : find_enum_class(content, result.second.states))
+		auto states(find_enum_class(content, result.second.states));
+		std::map<std::string, unsigned> state_string_to_index;
+		for (unsigned i(0); i<states.size(); i++)
 		{
-			std::cout << "       " << state << std::endl;
+			state_string_to_index.emplace(states.at(i), i);
+			std::cout << "       " << states.at(i) << std::endl;
 		}
 		std::cout << "Edges  " << result.second.edges << std::endl;
-		for (auto& edge : find_enum_class(content, result.second.edges))
+		auto edges(find_enum_class(content, result.second.edges));
+		for (auto& edge : edges)
 		{
 			std::cout << "       " << edge << std::endl;
 		}
 		std::cout << "Transitions" << std::endl;
-		for (auto& transition : find_transitions(content, result.second))
+		auto transitions(find_transitions(content, result.second));
+		for (auto& transition : transitions)
 		{
 			std::cout << "       " << transition.from << ":" << transition.ev << ":" << transition.to << std::endl;
+		}
+
+		// Dont layout once, do the triangle of workspaces if needed
+
+		std::cout << "Now layouting the statemachine...";
+		auto layouting_start(std::chrono::steady_clock::now());
+		std::vector<std::pair<unsigned, unsigned>> transition_edges(transitions.size());
+		std::transform(
+			transitions.begin(), transitions.end(),
+			transition_edges.begin(),
+			[&state_string_to_index](const transition& t)
+			{
+				return std::make_pair(
+					state_string_to_index.find(t.from)->second, 
+					state_string_to_index.find(t.to)->second
+				);
+			}
+		);
+		auto layout(
+			layouter_brute(
+				static_cast<grid_scalar>(states.size()),
+				transition_edges, 
+				grid_point{
+					static_cast<grid_scalar>(std::ceil(states.size()/2.0)),
+					static_cast<grid_scalar>(std::ceil(states.size()/2.0))
+				}
+			)
+		);
+		auto layouting_duration(
+			std::chrono::duration_cast<std::chrono::milliseconds>(
+				std::chrono::steady_clock::now()-layouting_start
+			)
+		);
+		std::cout << "done" << std::endl;
+		std::cout	<< "Layouting finished in "
+					<< layouting_duration.count() << "ms" << std::endl;
+		std::cout	<< "       " << layout.intersections << " intersections" << std::endl;
+		std::cout	<< "       " << layout.workspace_size << " workspace size" << std::endl;
+
+		for (unsigned i(0); i<states.size(); i++)
+		{
+			std::cout <<	"       " << states.at(i)						<< 
+							" at x:" << layout.states.at(i).get_center().x	<< 
+							" y:" << layout.states.at(i).get_center().y		<<
+							std::endl;
 		}
 
 	}

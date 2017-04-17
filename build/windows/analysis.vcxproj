@@ -19,12 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\sources\analysis\diamond.cpp" />
     <ClCompile Include="..\..\sources\analysis\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="layouter.vcxproj">
+      <Project>{d382bec4-c7b2-44b8-8d60-1cb3639bfbe9}</Project>
+    </ProjectReference>
     <ProjectReference Include="Support.vcxproj">
       <Project>{763f2171-6787-464f-96ae-7082220beda9}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\sources\analysis\diamond.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C1F99296-16F1-4CAA-96EB-D2CFDEBB577C}</ProjectGuid>

@@ -2,5 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\..\sources\analysis\main.cpp" />
+    <ClCompile Include="..\..\sources\analysis\diamond.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\sources\analysis\diamond.h" />
   </ItemGroup>
 </Project>
