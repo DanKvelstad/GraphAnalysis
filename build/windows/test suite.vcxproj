@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\sources\testcases\test_analysis.cpp" />
+    <ClCompile Include="..\..\sources\testcases\test_support.cpp" />
     <ClCompile Include="..\..\sources\testcases\test_moore.cpp" />
-    <ClCompile Include="..\..\sources\testcases\test_skia.cpp" />
+    <ClCompile Include="..\..\sources\testcases\test_presenter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="presenter.vcxproj">
