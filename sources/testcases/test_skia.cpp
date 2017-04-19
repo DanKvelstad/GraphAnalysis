@@ -3,7 +3,7 @@
 
 TEST(skia, hello_world)
 {
-	//raster(256, 256, example, "out_raster.png");
+	raster(256, 256, example, "out_raster.png");
 	//ganesh(256, 256, example, "out_ganesh.png");
 	skpdf(256, 256, example, "out_skpdf.pdf");
 	picture(256, 256, example, "out_picture.skp");

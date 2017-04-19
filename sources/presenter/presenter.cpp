@@ -28,20 +28,21 @@ extern "C"
 		return nullptr;
 	}
 }
-//void raster(int width, int height,
-//	void(*draw)(SkCanvas*),
-//	const char* path) {
-//	sk_sp<SkSurface> rasterSurface(
-//		SkSurface::MakeRasterN32Premul(width, height));
-//	SkCanvas* rasterCanvas = rasterSurface->getCanvas();
-//	draw(rasterCanvas);
-//	sk_sp<SkImage> img(s->newImageSnapshot());
-//	if (!img) { return; }
-//	sk_sp<SkData> png(img->encode());
-//	if (!png) { return; }
-//	SkFILEWStream out(path);
-//	(void)out.write(png->data(), png->size());
-//}
+
+void raster(int width, int height,
+	void(*draw)(SkCanvas*),
+	const char* path) {
+	sk_sp<SkSurface> rasterSurface(
+		SkSurface::MakeRasterN32Premul(width, height));
+	SkCanvas* rasterCanvas = rasterSurface->getCanvas();
+	draw(rasterCanvas);
+	sk_sp<SkImage> img(rasterSurface->makeImageSnapshot());
+	if (!img) { return; }
+	sk_sp<SkData> png(img->encode());
+	if (!png) { return; }
+	SkFILEWStream out(path);
+	(void)out.write(png->data(), png->size());
+}
 
 void skpdf(int width, int height,
 	void(*draw)(SkCanvas*),
