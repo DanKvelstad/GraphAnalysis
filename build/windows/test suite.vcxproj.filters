@@ -3,6 +3,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\sources\testcases\test_moore.cpp" />
     <ClCompile Include="..\..\sources\testcases\test_analysis.cpp" />
-    <ClCompile Include="..\..\sources\testcases\test_libpng.cpp" />
+    <ClCompile Include="..\..\sources\testcases\test_skia.cpp" />
   </ItemGroup>
 </Project>

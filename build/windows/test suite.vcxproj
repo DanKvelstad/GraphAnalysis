@@ -20,8 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\sources\testcases\test_analysis.cpp" />
-    <ClCompile Include="..\..\sources\testcases\test_libpng.cpp" />
     <ClCompile Include="..\..\sources\testcases\test_moore.cpp" />
+    <ClCompile Include="..\..\sources\testcases\test_skia.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Support.vcxproj">
@@ -69,26 +69,26 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="Global.props" />
-    <Import Project="Google Test.props" />
-    <Import Project="libpng.props" />
+    <Import Project="library_gtest.props" />
+    <Import Project="library_skia.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="Global.props" />
-    <Import Project="Google Test.props" />
-    <Import Project="libpng.props" />
+    <Import Project="library_gtest.props" />
+    <Import Project="library_skia.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="Global.props" />
-    <Import Project="Google Test.props" />
-    <Import Project="libpng.props" />
+    <Import Project="library_gtest.props" />
+    <Import Project="library_skia.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="Global.props" />
-    <Import Project="Google Test.props" />
-    <Import Project="libpng.props" />
+    <Import Project="library_gtest.props" />
+    <Import Project="library_skia.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

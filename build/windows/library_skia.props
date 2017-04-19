@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <ItemDefinitionGroup>
+	<ClCompile>
+ 	  <AdditionalIncludeDirectories>$(Root)libraries\skia\include\config;$(Root)libraries\skia\include\core;$(Root)libraries\skia\include\gpu;$(Root)libraries\skia\include\effects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+	</ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(Root)libraries\skia\out\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>skia.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

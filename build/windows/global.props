@@ -21,6 +21,17 @@
     <IntDir>$(Root)intermediate\$(ProjectName)\windows x86 $(Configuration)\</IntDir>
   </PropertyGroup>
 
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
   <ItemDefinitionGroup>
     <BuildLog>
       <Path>$(IntDir)$(MSBuildProjectName).log</Path>
