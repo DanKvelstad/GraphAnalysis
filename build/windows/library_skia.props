@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <ItemDefinitionGroup>
 	<ClCompile>
- 	  <AdditionalIncludeDirectories>$(Root)libraries\skia\include\config;$(Root)libraries\skia\include\core;$(Root)libraries\skia\include\gpu;$(Root)libraries\skia\include\effects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+ 	  <AdditionalIncludeDirectories>$(Root)libraries\skia\include\config;$(Root)libraries\skia\include\core;$(Root)libraries\skia\include\utils;$(Root)libraries\skia\include\effects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 	</ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(Root)libraries\skia\out\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
