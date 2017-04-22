@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\sources\presenter\presenter.cpp" />
+    <ClCompile Include="..\..\sources\presenter\linked_state.cpp">
+      <Filter>toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\presenter\linked_edge.cpp">
+      <Filter>toolbox</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\sources\presenter\dllexport.h" />
+    <ClInclude Include="..\..\sources\presenter\presenter.h" />
+    <ClInclude Include="..\..\sources\presenter\linked_state.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\linked_edge.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="toolbox">
+      <UniqueIdentifier>{51bc35ed-4eb3-442d-a8a8-95edff1ab4fb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

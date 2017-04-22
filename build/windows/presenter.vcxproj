@@ -20,10 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\sources\presenter\dllexport.h" />
+    <ClInclude Include="..\..\sources\presenter\linked_state.h" />
     <ClInclude Include="..\..\sources\presenter\presenter.h" />
+    <ClInclude Include="..\..\sources\presenter\linked_edge.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\sources\presenter\linked_edge.cpp" />
     <ClCompile Include="..\..\sources\presenter\presenter.cpp" />
+    <ClCompile Include="..\..\sources\presenter\linked_state.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4676F09B-D796-4DD9-B382-B9E1AE03F16D}</ProjectGuid>
