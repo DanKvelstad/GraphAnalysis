@@ -18,6 +18,9 @@
     <ClInclude Include="..\..\sources\presenter\linked_edge.h">
       <Filter>toolbox</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\common.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="toolbox">

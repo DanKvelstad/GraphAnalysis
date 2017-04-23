@@ -21,8 +21,8 @@ public:
 private:
 
 	const std::string	name;
-	const linked_state&	source;
-	const linked_state&	target;
+	const point			source;
+	const point			target;
 
 	std::unique_ptr<linked_edge> linked;
 

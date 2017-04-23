@@ -23,6 +23,7 @@
     <ClInclude Include="..\..\sources\presenter\linked_state.h" />
     <ClInclude Include="..\..\sources\presenter\presenter.h" />
     <ClInclude Include="..\..\sources\presenter\linked_edge.h" />
+    <ClInclude Include="..\..\sources\presenter\common.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\sources\presenter\linked_edge.cpp" />

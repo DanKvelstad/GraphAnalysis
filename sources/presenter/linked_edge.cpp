@@ -4,8 +4,8 @@
 
 linked_edge::linked_edge(std::string name, const linked_state& source, const linked_state& target)
 : name(name)
-, source(source)
-, target(target)
+, source(source.intersection(target))
+, target(target.intersection(source))
 {
 }
 
@@ -50,8 +50,8 @@ void linked_edge::draw(SkCanvas* canvas) const
 	paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
 
 	canvas->drawLine(
-		150, 75,
-		200, 75,
+		static_cast<SkScalar>(source.x), static_cast<SkScalar>(source.y),
+		static_cast<SkScalar>(target.x), static_cast<SkScalar>(target.y),
 		paint_line
 	);
 
