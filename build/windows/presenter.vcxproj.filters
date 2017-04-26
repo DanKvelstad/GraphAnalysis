@@ -3,27 +3,25 @@
   <ItemGroup>
     <ClCompile Include="..\..\sources\presenter\presenter.cpp" />
     <ClCompile Include="..\..\sources\presenter\linked_state.cpp">
-      <Filter>toolbox</Filter>
+      <Filter>model</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sources\presenter\linked_edge.cpp">
-      <Filter>toolbox</Filter>
+      <Filter>model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\sources\presenter\dllexport.h" />
     <ClInclude Include="..\..\sources\presenter\presenter.h" />
     <ClInclude Include="..\..\sources\presenter\linked_state.h">
-      <Filter>toolbox</Filter>
+      <Filter>model</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sources\presenter\linked_edge.h">
-      <Filter>toolbox</Filter>
+      <Filter>model</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sources\presenter\common.h">
-      <Filter>toolbox</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\common.h" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="toolbox">
+    <Filter Include="model">
       <UniqueIdentifier>{51bc35ed-4eb3-442d-a8a8-95edff1ab4fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

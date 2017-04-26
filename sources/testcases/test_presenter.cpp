@@ -6,10 +6,12 @@
 TEST(skia, hello_world)
 {
 
-	linked_state states("s0", 0, 0);
+	linked_state states;
+	states.emplace("s0", 0, 0);
 	states.emplace("s1", 1, 0);
 	
-	linked_edge edges("e0", states, *states.next());
+	linked_edge edges;
+	edges.emplace("e0", 0, 1);
 
 	draw(states, edges);
 

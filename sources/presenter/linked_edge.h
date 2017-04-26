@@ -1,29 +1,30 @@
 #pragma once
 
 #include "dllexport.h"
-#include "linked_state.h"
-#include <memory>
 #include <string>
 
-class linked_edge
+class SkCanvas;
+class linked_state;
+
+class DLLEXPORT linked_edge
 {
 
 public:
 
-	DLLEXPORT linked_edge(std::string name, const linked_state& source, const linked_state& target);
-	DLLEXPORT ~linked_edge();
+	linked_edge(void);
+	linked_edge(const linked_edge& other);
+	~linked_edge(void);
 
-	DLLEXPORT void emplace(std::string name, const linked_state& source, const linked_state& target);
-	DLLEXPORT linked_edge* next(void);
+	void emplace(const char* name, unsigned source, unsigned target);
+	linked_edge* next(void);
 
-	void draw(SkCanvas* canvas) const;
+	void draw(SkCanvas* canvas, const linked_state& states) const;
 
 private:
 
-	const std::string	name;
-	const point			source;
-	const point			target;
-
-	std::unique_ptr<linked_edge> linked;
+	const char*		name;
+	unsigned		source;
+	unsigned		target;
+	linked_edge*	linked;
 
 };

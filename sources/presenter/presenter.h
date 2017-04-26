@@ -5,6 +5,6 @@
 #include "linked_edge.h"
 
 DLLEXPORT void draw(
-	linked_state& states, 
-	linked_edge&  edges
+	linked_state states, 
+	linked_edge  edges
 );

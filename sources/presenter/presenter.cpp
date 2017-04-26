@@ -1,5 +1,6 @@
 #include "presenter.h"
 
+#include <algorithm>
 #include <Windows.h>
 
 #include "SkCanvas.h"
@@ -25,17 +26,31 @@ extern "C"
 }
 
 void draw(
-	linked_state& states,
-	linked_edge&  edges
+	linked_state states,
+	linked_edge  edges
 )
 {
 
+	int surface_width(0);
+	int surface_height(0);
+	for (auto it(&states); nullptr!=it; it = it->next())
+	{
+		if (surface_width < it->get().right)
+		{
+			surface_width = it->get().right;
+		}
+		if (surface_height < it->get().bottom)
+		{
+			surface_height = it->get().bottom;
+		}
+	}
+
 	sk_sp<SkSurface> surface(
-		SkSurface::MakeRasterN32Premul(350, 150)
+		SkSurface::MakeRasterN32Premul(surface_width, surface_height)
 	);
 
 	states.draw(surface->getCanvas());
-	edges.draw(surface->getCanvas());
+	edges.draw(surface->getCanvas(), states);
 
 	sk_sp<SkImage> img(surface->makeImageSnapshot());
 	if (!img) 

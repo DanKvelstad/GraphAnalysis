@@ -19,19 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\sources\layouter\intersection.cpp" />
-    <ClCompile Include="..\..\sources\layouter\area_rectangle.cpp" />
     <ClCompile Include="..\..\sources\layouter\layouter_brute.cpp" />
-    <ClCompile Include="..\..\sources\layouter\line.cpp" />
+    <ClCompile Include="..\..\sources\layouter\linked_knot.cpp" />
+    <ClCompile Include="..\..\sources\layouter\linked_strand.cpp" />
+    <ClCompile Include="..\..\sources\layouter\toolbox.cpp" />
+    <ClCompile Include="..\..\sources\layouter\web.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\sources\layouter\shape.h" />
-    <ClInclude Include="..\..\sources\layouter\area_rectangle.h" />
     <ClInclude Include="..\..\sources\layouter\common.h" />
-    <ClInclude Include="..\..\sources\layouter\intersection.h" />
     <ClInclude Include="..\..\sources\layouter\layouters.h" />
-    <ClInclude Include="..\..\sources\layouter\line.h" />
+    <ClInclude Include="..\..\sources\layouter\linked_knot.h" />
+    <ClInclude Include="..\..\sources\layouter\linked_strand.h" />
+    <ClInclude Include="..\..\sources\layouter\toolbox.h" />
     <ClInclude Include="..\..\sources\layouter\dllexport.h" />
+    <ClInclude Include="..\..\sources\layouter\web.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D382BEC4-C7B2-44B8-8D60-1CB3639BFBE9}</ProjectGuid>

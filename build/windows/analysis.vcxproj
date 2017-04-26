@@ -26,6 +26,9 @@
     <ProjectReference Include="layouter.vcxproj">
       <Project>{d382bec4-c7b2-44b8-8d60-1cb3639bfbe9}</Project>
     </ProjectReference>
+    <ProjectReference Include="presenter.vcxproj">
+      <Project>{4676f09b-d796-4dd9-b382-b9e1ae03f16d}</Project>
+    </ProjectReference>
     <ProjectReference Include="Support.vcxproj">
       <Project>{763f2171-6787-464f-96ae-7082220beda9}</Project>
     </ProjectReference>

@@ -2,39 +2,59 @@
 
 #include "dllexport.h"
 #include "common.h"
-#include <memory>
 #include <string>
 
 class SkCanvas;
 
-class linked_state
+class DLLEXPORT linked_state
 {
+
+	struct state_data
+	{
+
+		state_data(const char* name, int left, int top, int width, int height)
+		: name(name)
+		, left(left)
+		, top(top)
+		, right(left + width)
+		, bottom(top + height)
+		, center(point{ left + width / 2, top + height / 2 })
+		{
+		}
+
+		const char*	name;
+		const int	left;
+		const int	top;
+		const int	right;
+		const int	bottom;
+		const point	center;
+
+	};
 
 public:
 
-	DLLEXPORT linked_state(std::string name, int x, int y);
-	DLLEXPORT ~linked_state();
+	linked_state(unsigned index=0);
+	linked_state(const linked_state& other);
+	~linked_state(void);
 
-	DLLEXPORT void emplace(std::string name, int x, int y);
-	DLLEXPORT linked_state* next(void);
+	void emplace(const char* name, int x, int y);
+	linked_state* next(void);
+	const linked_state& at(unsigned i) const;
 
 	point intersection(const linked_state& target) const;
+
+	const state_data& get() const;
 
 	void draw(SkCanvas* canvas) const;
 
 private:
 
-	const int width;
-	const int height;
-	const int spacing;
+	const unsigned	index;
+	const int		width;
+	const int		height;
+	const int		spacing;
 
-	const std::string	name;
-	const int		left;
-	const int		top;
-	const int		right;
-	const int		bottom;
-	const point			center;
-	
-	std::unique_ptr<linked_state> linked;
+	state_data*		data;
+	linked_state*	linked;
 
 };

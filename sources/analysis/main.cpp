@@ -1,4 +1,7 @@
 #include "support/support.h"
+#include "presenter/presenter.h"
+#include "presenter/linked_state.h"
+#include "presenter/linked_edge.h"
 #include <experimental/filesystem>
 #include <iostream>
 #include <fstream>
@@ -98,8 +101,6 @@ int main(int argc, char* argv[])
 			std::cout << "       " << transition.from << ":" << transition.ev << ":" << transition.to << std::endl;
 		}
 
-		// Dont layout once, do the triangle of workspaces if needed
-
 		std::cout << "Now layouting the statemachine...";
 		auto layouting_start(std::chrono::steady_clock::now());
 		std::vector<std::pair<unsigned, unsigned>> transition_edges(transitions.size());
@@ -114,16 +115,7 @@ int main(int argc, char* argv[])
 				);
 			}
 		);
-		auto layout(
-			layouter_brute(
-				static_cast<grid_scalar>(states.size()),
-				transition_edges, 
-				grid_point{
-					static_cast<grid_scalar>(std::ceil(states.size()/2.0)),
-					static_cast<grid_scalar>(std::ceil(states.size()/2.0))
-				}
-			)
-		);
+		auto layout(layouter_brute(transition_edges));
 		auto layouting_duration(
 			std::chrono::duration_cast<std::chrono::milliseconds>(
 				std::chrono::steady_clock::now()-layouting_start
@@ -132,16 +124,29 @@ int main(int argc, char* argv[])
 		std::cout << "done" << std::endl;
 		std::cout	<< "Layouting finished in "
 					<< layouting_duration.count() << "ms" << std::endl;
-		std::cout	<< "       " << layout.intersections << " intersections" << std::endl;
-		std::cout	<< "       " << layout.workspace_size << " workspace size" << std::endl;
+		std::cout	<< "       " << layout.get_intersection_count() << " intersections" << std::endl;
 
-		for (unsigned i(0); i<states.size(); i++)
+		linked_state l_states;
+		for (auto it(layout.get_knots()); nullptr != it; it = it->next())
 		{
-			std::cout <<	"       " << states.at(i)						<< 
-							" at x:" << layout.states.at(i).get_center().x	<< 
-							" y:" << layout.states.at(i).get_center().y		<<
-							std::endl;
+			l_states.emplace(
+				states.at(it->get_index()).c_str(), 
+				it->get().x, 
+				it->get().y
+			);
 		}
+
+		linked_edge l_edges;
+		for (auto it(layout.get_strands()); nullptr!=it; it = it->next())
+		{
+			l_edges.emplace(
+				"...", 
+				it->get_source(),
+				it->get_target()
+			);
+		}
+
+		draw(l_states, l_edges);
 
 	}
 

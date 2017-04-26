@@ -3,33 +3,65 @@
 #include "SkTextBox.h"
 #include <algorithm>
 
-linked_state::linked_state(std::string name, int x, int y)
-: width(100)
+linked_state::linked_state(unsigned index)
+: index(index)
+, width(100)
 , height(50)
 , spacing(std::min(width, height))
-, name(name)
-, left(x*(width +spacing)+spacing)
-, top(y*(height+spacing)+spacing)
-, right(left+width)
-, bottom(top+height)
-, center(point{ left+width/2, top+height/2 })
+, data(nullptr)
+, linked(nullptr)
 {
+}
+
+linked_state::linked_state(const linked_state& other)
+: index(other.index)
+, width(other.width)
+, height(other.height)
+, spacing(other.spacing)
+{
+	if (nullptr != other.linked)
+	{
+		linked = new linked_state(*other.linked);
+	}
+	else
+	{
+		linked = nullptr;
+	}
+	if (nullptr != other.data)
+	{
+		data = new state_data(*other.data);
+	}
+	else
+	{
+		linked = nullptr;
+	}
 }
 
 linked_state::~linked_state()
 {
 }
 
-void linked_state::emplace(std::string name, int x, int y)
+void linked_state::emplace(const char* name, int x, int y)
 {
 
-	if (linked)
+	if (nullptr == data)
 	{
+		data = new state_data(
+			name,
+			x*(width + spacing) + spacing,
+			y*(height + spacing) + spacing,
+			width,
+			height
+		);
+	}
+	else if (nullptr == linked)
+	{
+		linked = new linked_state(index+1);
 		linked->emplace(name, x, y);
 	}
 	else
 	{
-		linked = std::make_unique<linked_state>(name, x, y);
+		linked->emplace(name, x, y);
 	}
 
 }
@@ -37,33 +69,37 @@ void linked_state::emplace(std::string name, int x, int y)
 linked_state* linked_state::next(void) 
 {
 	
-	return linked.get();
+	return linked;
 
 }
 
-bool contains(point s, point t, point p)
+const linked_state& linked_state::at(unsigned i) const
 {
-
-	scalar cross_product((p.y - s.y)*(t.x - s.x) - (p.x - s.x)*(t.y - s.y));
-
-	if (s.x == p.x && s.y == p.y)
-	{	// Charlie is Alpha
-		return true;
-	}
-	else if (t.x == p.x && t.y == p.y)
-	{	// Charlie is Bravo
-		return true;
-	}
-	else if (!(0.1>cross_product&&-0.1<cross_product))
-	{	// Charlie is not on the line
-		return false;
+	if (0 == i)
+	{
+		return *this;
 	}
 	else
-	{	// Evaluate if Charlie is between Alpha and Bravo
+	{
+		return linked->at(i-1);
+	}
+}
 
-		// http://stackoverflow.com/a/328122
+bool contains(point s, point t, float p_x, float p_y)
+{
 
-		auto dot_product = (p.x - s.x)*(t.x - s.x) + (p.y - s.y)*(t.y - s.y);
+	if (s.x == p_x && s.y == p_y)
+	{	// p is s
+		return true;
+	}
+	else if (t.x == p_x && t.y == p_y)
+	{	// t is p
+		return true;
+	}
+	else if (0 == ((p_y-s.y)*(t.x-s.x)-(p_x-s.x)*(t.y-s.y)))
+	{	// p is on the line, the cross product is zero
+
+		auto dot_product    = (p_x - s.x)*(t.x - s.x) + (p_y - s.y)*(t.y - s.y);
 		auto squared_length = (t.x - s.x)*(t.x - s.x) + (t.y - s.y)*(t.y - s.y);
 
 		if (0.0 <= dot_product && dot_product <= squared_length)
@@ -76,6 +112,11 @@ bool contains(point s, point t, point p)
 		}
 
 	}
+	else
+	{	// else p is not on the line
+		return false;
+	}
+
 
 }
 
@@ -101,33 +142,30 @@ std::pair<bool, point> intersecting_lines(point ts, point tt, point os, point ot
 	else
 	{	// They are not parallel
 
-		point intersection_point{
-			static_cast<scalar>(
-				std::round(
-					( (ts.x*tt.y - ts.y*tt.x)*(os.x-ot.x) - 
-					  (ts.x-tt.x)*(os.x*ot.y - os.y*ot.x) )
-					/ denominator
-				)
-			),
-			static_cast<scalar>(
-				std::round(
-					( (ts.x*tt.y - ts.y*tt.x)*(os.y-ot.y) - 
-					  (ts.y-tt.y)*(os.x*ot.y - os.y*ot.x) )
-					/ denominator
-				)
-			)
-		};
+		float intersection_x(
+			( (ts.x*tt.y - ts.y*tt.x)*(os.x-ot.x) - 
+			  (ts.x-tt.x)*(os.x*ot.y - os.y*ot.x) )
+			/ denominator
+		);
+		float intersection_y(
+			( (ts.x*tt.y - ts.y*tt.x)*(os.y-ot.y) - 
+			  (ts.y-tt.y)*(os.x*ot.y - os.y*ot.x) )
+			/ denominator
+		);
 
 		// " Note that the intersection point is for the infinitely long lines defined 
 		//   by the points, rather than the line segments between the points, and can 
 		//   produce an intersection point beyond the lengths of the line segments. "
 
-		if (contains(ts, tt, intersection_point) &&
-			contains(os, ot, intersection_point))
+		if (contains(ts, tt, intersection_x, intersection_y) &&
+			contains(os, ot, intersection_x, intersection_y))
 		{
 			result = std::make_pair(
 				true,
-				intersection_point
+				point{
+					static_cast<int>(std::round(intersection_x)),
+					static_cast<int>(std::round(intersection_y))
+				}
 			);
 		}
 		else
@@ -147,15 +185,15 @@ std::pair<bool, point> intersecting_lines(point ts, point tt, point os, point ot
 point linked_state::intersection(const linked_state& target) const
 {
 
-	point os(center);
-	point ot(target.center);
+	point center_of_source(data->center);
+	point center_of_target(target.data->center);
 
 	{	// left
 		auto result = intersecting_lines(
-			point{ left,	bottom	},
-			point{ left,	top		},
-			os,
-			ot
+			point{ data->left,	data->bottom	},
+			point{ data->left,	data->top		},
+			center_of_source,
+			center_of_target
 		);
 		if (result.first)
 		{
@@ -164,10 +202,10 @@ point linked_state::intersection(const linked_state& target) const
 	}
 	{	// top
 		auto result = intersecting_lines(
-			point{ left,	top		},
-			point{ right,	top		},
-			os,
-			ot
+			point{ data->left,	data->top		},
+			point{ data->right,	data->top		},
+			center_of_source,
+			center_of_target
 		);
 		if (result.first)
 		{
@@ -176,10 +214,10 @@ point linked_state::intersection(const linked_state& target) const
 	}
 	{	// right
 		auto result = intersecting_lines(
-			point{ right,	top		},
-			point{ right,	bottom	},
-			os,
-			ot
+			point{ data->right,	data->top		},
+			point{ data->right,	data->bottom	},
+			center_of_source,
+			center_of_target
 		);
 		if (result.first)
 		{
@@ -188,10 +226,10 @@ point linked_state::intersection(const linked_state& target) const
 	}
 	{	// bottom
 		auto result = intersecting_lines(
-			point{ right,	bottom	},
-			point{ left,	bottom	},
-			os,
-			ot
+			point{ data->right,	data->bottom	},
+			point{ data->left,	data->bottom	},
+			center_of_source,
+			center_of_target
 		);
 		if (result.first)
 		{
@@ -201,6 +239,11 @@ point linked_state::intersection(const linked_state& target) const
 
 	throw std::exception();
 
+}
+
+const linked_state::state_data& linked_state::get() const
+{
+	return *data;
 }
 
 void linked_state::draw(SkCanvas* canvas) const
@@ -214,10 +257,10 @@ void linked_state::draw(SkCanvas* canvas) const
 
 	canvas->drawRect(
 		SkRect::MakeLTRB(
-			static_cast<SkScalar>(left), 
-			static_cast<SkScalar>(top),
-			static_cast<SkScalar>(right), 
-			static_cast<SkScalar>(bottom)
+			static_cast<SkScalar>(data->left), 
+			static_cast<SkScalar>(data->top),
+			static_cast<SkScalar>(data->right), 
+			static_cast<SkScalar>(data->bottom)
 		),
 		paint_shape
 	);
@@ -232,12 +275,12 @@ void linked_state::draw(SkCanvas* canvas) const
 
 	SkTextBox text_box;
 	text_box.setBox(
-		static_cast<SkScalar>(left),
-		static_cast<SkScalar>(top),
-		static_cast<SkScalar>(right),
-		static_cast<SkScalar>(bottom)
+		static_cast<SkScalar>(data->left),
+		static_cast<SkScalar>(data->top),
+		static_cast<SkScalar>(data->right),
+		static_cast<SkScalar>(data->bottom)
 	); 
-	text_box.setText(name.c_str(), name.length(), paint_text);
+	text_box.setText(data->name, strlen(data->name), paint_text);
 	text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
 	text_box.draw(canvas);
 
