@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "support/support.h"
+#include "compiler/support.h"
 
 TEST(test_analysis, simple_variable_definition)
 {

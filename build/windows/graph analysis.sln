@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test suite", "test suite.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "analysis", "analysis.vcxproj", "{C1F99296-16F1-4CAA-96EB-D2CFDEBB577C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "support", "support.vcxproj", "{763F2171-6787-464F-96AE-7082220BEDA9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "compiler", "compiler.vcxproj", "{763F2171-6787-464F-96AE-7082220BEDA9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "layouter", "layouter.vcxproj", "{D382BEC4-C7B2-44B8-8D60-1CB3639BFBE9}"
 EndProject
