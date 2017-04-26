@@ -12,7 +12,7 @@ enum class edge
 	e0
 };
 
-TEST(Moore, Simple)
+TEST(test_moore, Simple)
 {
 
 	std::queue<state> states;

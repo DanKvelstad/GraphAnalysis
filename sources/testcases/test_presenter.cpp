@@ -3,7 +3,7 @@
 #include "presenter/linked_state.h"
 #include "presenter/linked_edge.h"
 
-TEST(skia, hello_world)
+TEST(test_presenter, hello_world)
 {
 
 	linked_state states;
