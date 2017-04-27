@@ -246,6 +246,11 @@ const linked_state::state_data& linked_state::get() const
 	return *data;
 }
 
+unsigned linked_state::get_spacing(void) const
+{
+	return spacing;
+}
+
 void linked_state::draw(SkCanvas* canvas) const
 {
 
@@ -253,7 +258,7 @@ void linked_state::draw(SkCanvas* canvas) const
 	paint_shape.setStyle(SkPaint::kStroke_Style);
 	paint_shape.setAntiAlias(true);
 	paint_shape.setStrokeWidth(4);
-	paint_shape.setColor(SK_ColorBLUE);
+	paint_shape.setColor(SK_ColorBLACK);
 
 	canvas->drawRect(
 		SkRect::MakeLTRB(
@@ -269,7 +274,7 @@ void linked_state::draw(SkCanvas* canvas) const
 	SkPaint paint_text;
 	paint_text.setAntiAlias(true);
 	paint_text.setStrokeWidth(4);
-	paint_text.setColor(SK_ColorMAGENTA);
+	paint_text.setColor(SK_ColorBLACK);
 	paint_text.setTextSize(22.f);
 	paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
 

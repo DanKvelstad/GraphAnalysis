@@ -44,11 +44,14 @@ void draw(
 			surface_height = it->get().bottom;
 		}
 	}
+	surface_width  += states.get_spacing();
+	surface_height += states.get_spacing();
 
 	sk_sp<SkSurface> surface(
 		SkSurface::MakeRasterN32Premul(surface_width, surface_height)
 	);
 
+	surface->getCanvas()->clear(SK_ColorWHITE);
 	states.draw(surface->getCanvas());
 	edges.draw(surface->getCanvas(), states);
 

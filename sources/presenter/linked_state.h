@@ -44,6 +44,7 @@ public:
 	point intersection(const linked_state& target) const;
 
 	const state_data& get() const;
+	unsigned get_spacing(void) const;
 
 	void draw(SkCanvas* canvas) const;
 

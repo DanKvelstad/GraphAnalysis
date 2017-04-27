@@ -56,55 +56,56 @@ linked_edge* linked_edge::next(void)
 	return linked;
 }
 
-//auto get_endcap(void) const -> std::vector<pixel_point>
-//{
-//
-//	const float pi(3.141592653589793238462643383279502884f);
-//	const float offset_to_line_angle(pi / 4);
-//	const float length(10);
-//
-//	float angle(atan2(target.y - source.y, target.x - source.x));
-//
-//	std::vector<pixel_point> endcap;
-//
-//	endcap.emplace_back(
-//		target.x - cosf(angle - offset_to_line_angle)*length,
-//		target.y - sinf(angle - offset_to_line_angle)*length
-//	);
-//
-//	endcap.emplace_back(target.x, target.y);
-//
-//	endcap.emplace_back(
-//		target.x - cosf(angle + offset_to_line_angle)*length,
-//		target.y - sinf(angle + offset_to_line_angle)*length
-//	);
-//
-//	return endcap;
-//
-//}
-
 void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 {
 
 	SkPaint paint_line;
 	paint_line.setAntiAlias(true);
 	paint_line.setStrokeWidth(4);
-	paint_line.setColor(SK_ColorRED);
+	paint_line.setColor(SK_ColorBLACK);
 
 	SkPaint paint_text;
 	paint_text.setAntiAlias(true);
 	paint_text.setStrokeWidth(4);
-	paint_text.setColor(SK_ColorWHITE);
+	paint_text.setColor(SK_ColorBLACK);
 	paint_text.setTextSize(22.f);
 	paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
-
 
 	auto source_point(states.at(source).intersection(states.at(target)));
 	auto target_point(states.at(target).intersection(states.at(source)));
 
 	canvas->drawLine(
-		static_cast<SkScalar>(source_point.x), static_cast<SkScalar>(source_point.y),
-		static_cast<SkScalar>(target_point.x), static_cast<SkScalar>(target_point.y),
+		static_cast<SkScalar>(source_point.x), 
+		static_cast<SkScalar>(source_point.y),
+		static_cast<SkScalar>(target_point.x), 
+		static_cast<SkScalar>(target_point.y),
+		paint_line
+	);
+
+	const float pi(3.141592653589793238462643383279502884f);
+	const float offset_to_line_angle(pi / 4);
+	const float length(10);
+
+	float angle(
+		atan2f(
+			static_cast<float>(target_point.y-source_point.y), 
+			static_cast<float>(target_point.x-source_point.x)
+		)
+	);
+
+	canvas->drawLine(
+		static_cast<SkScalar>(target_point.x - cosf(angle - offset_to_line_angle)*length),
+		static_cast<SkScalar>(target_point.y - sinf(angle - offset_to_line_angle)*length),
+		static_cast<SkScalar>(target_point.x), 
+		static_cast<SkScalar>(target_point.y),
+		paint_line
+	);
+
+	canvas->drawLine(
+		static_cast<SkScalar>(target_point.x - cosf(angle + offset_to_line_angle)*length),
+		static_cast<SkScalar>(target_point.y - sinf(angle + offset_to_line_angle)*length),
+		static_cast<SkScalar>(target_point.x),
+		static_cast<SkScalar>(target_point.y),
 		paint_line
 	);
 
