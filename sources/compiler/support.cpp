@@ -119,11 +119,11 @@ std::vector<transition> find_transitions(std::string content, const definition& 
 		}
 		if (2 == tmp.size())
 		{
-			result.emplace_back(transition{ tmp.at(0), "", tmp.at(1) });
+			result.emplace_back(transition{ tmp.at(0), tmp.at(1), "" });
 		}
 		else if (3 == tmp.size())
 		{
-			result.emplace_back(transition{ tmp.at(0), tmp.at(1), tmp.at(2) });
+			result.emplace_back(transition{ tmp.at(0), tmp.at(2), tmp.at(1) });
 		}
 		else
 		{

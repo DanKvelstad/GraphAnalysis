@@ -23,7 +23,7 @@ class test
 	test(void)
 	: state_machine(state::s0, [](){})
 	{
-		state_machine.add_state(state::s1, [](){});
+		state_machine.add_state(state::s1, [c](){});
 		state_machine.add_state(state::s2, [](){});
 		state_machine.add_state(state::s3, [](){});
 		state_machine.add_transition(state::s0, event::e0, state::s2);
@@ -32,6 +32,7 @@ class test
 		state_machine.add_transition(state::s2, state::s1);
 		state_machine.add_transition(state::s3, state::s1);
 
+		state_machine.handle_event(event::e0);
 	}
 
 	moore<state, event> state_machine;

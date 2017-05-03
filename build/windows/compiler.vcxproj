@@ -151,10 +151,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\sources\compiler\compiler.cpp" />
     <ClCompile Include="..\..\sources\compiler\dllexport.h" />
+    <ClCompile Include="..\..\sources\compiler\linked_transition.cpp" />
+    <ClCompile Include="..\..\sources\compiler\linked_state_name.cpp" />
+    <ClCompile Include="..\..\sources\compiler\parsed.cpp" />
     <ClCompile Include="..\..\sources\compiler\support.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\sources\compiler\common.h" />
+    <ClInclude Include="..\..\sources\compiler\compiler.h" />
+    <ClInclude Include="..\..\sources\compiler\linked_transition.h" />
+    <ClInclude Include="..\..\sources\compiler\linked_state_name.h" />
+    <ClInclude Include="..\..\sources\compiler\parsed.h" />
     <ClInclude Include="..\..\sources\compiler\support.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

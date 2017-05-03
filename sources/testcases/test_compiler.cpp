@@ -46,8 +46,8 @@ TEST(test_compiler, simple_transition_without_event)
 		"state_machine.add_transition(my_states::" + input.at(0) +", my_states::" + input.at(1) +");",
 		definition{"state_machine", "my_states", "my_edges"}
 	);
-	ASSERT_EQ(input.at(0), output.at(0).from);
-	ASSERT_EQ(input.at(1), output.at(0).to);
+	ASSERT_EQ(input.at(0), output.at(0).from_state);
+	ASSERT_EQ(input.at(1), output.at(0).to_state);
 }
 
 TEST(test_compiler, simple_transition_with_event)
@@ -57,7 +57,7 @@ TEST(test_compiler, simple_transition_with_event)
 		"state_machine.add_transition(my_states::" + input.at(0) + ", my_events::" + input.at(1) + ", my_states::" + input.at(2) + ");",
 		definition{ "state_machine", "my_states", "my_edges" }
 	);
-	ASSERT_EQ(input.at(0), output.at(0).from);
-	ASSERT_EQ(input.at(1), output.at(0).ev);
-	ASSERT_EQ(input.at(2), output.at(0).to);
+	ASSERT_EQ(input.at(0), output.at(0).from_state);
+	ASSERT_EQ(input.at(1), output.at(0).event_name);
+	ASSERT_EQ(input.at(2), output.at(0).to_state);
 }
