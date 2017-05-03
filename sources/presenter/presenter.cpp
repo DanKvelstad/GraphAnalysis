@@ -26,8 +26,9 @@ extern "C"
 }
 
 void draw(
-	linked_state states,
-	linked_edge  edges
+	const path&		output,
+	linked_state	states,
+	linked_edge		edges
 )
 {
 
@@ -67,7 +68,8 @@ void draw(
 		throw std::exception();
 	}
 	
-	SkFILEWStream out("state_machine.png");
+	auto output_string(output.string());
+	SkFILEWStream out(output_string.c_str());
 	(void)out.write(png->data(), png->size());
 
 }

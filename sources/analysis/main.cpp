@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 	std::cout	<< "Compiling finished in "
 				<< compiling_duration.count() << "ms" << std::endl;
 	
-	{
+	{	// parse should return many parsed statemachines, iterate over them
 
 		std::vector<std::pair<unsigned, unsigned>> transition_edges;
 		// transition_edges.reserve(parsed.transition_count());
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 			);
 		}
 
-		draw(l_states, l_edges);
+		draw(path(canonical(argv[0]).parent_path())/"analysis.png", l_states, l_edges);
 
 	}
 
