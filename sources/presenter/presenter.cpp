@@ -32,10 +32,15 @@ void draw(
 )
 {
 
+	int max_state_length(0);
 	int surface_width(0);
 	int surface_height(0);
 	for (auto it(&states); nullptr!=it; it = it->next())
 	{
+		if (max_state_length<strlen(it->get().name))
+		{
+			max_state_length = static_cast<unsigned>(strlen(it->get().name));
+		}
 		if (surface_width < it->get().right)
 		{
 			surface_width = it->get().right;
@@ -47,6 +52,15 @@ void draw(
 	}
 	surface_width  += states.get_spacing();
 	surface_height += states.get_spacing();
+
+	int max_edge_length(0);
+	for (auto it(&edges); nullptr != it; it = it->next())
+	{
+		if (max_edge_length<strlen(it->get_name()))
+		{
+			max_edge_length = static_cast<unsigned>(strlen(it->get_name()));
+		}
+	}
 
 	sk_sp<SkSurface> surface(
 		SkSurface::MakeRasterN32Premul(surface_width, surface_height)

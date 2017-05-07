@@ -260,17 +260,18 @@ void linked_state::draw(SkCanvas* canvas) const
 	paint_shape.setStrokeWidth(4);
 	paint_shape.setColor(SK_ColorBLACK);
 
-	canvas->drawRect(
+	canvas->drawRoundRect(
 		SkRect::MakeLTRB(
 			static_cast<SkScalar>(data->left), 
 			static_cast<SkScalar>(data->top),
 			static_cast<SkScalar>(data->right), 
 			static_cast<SkScalar>(data->bottom)
 		),
+		10,
+		10,
 		paint_shape
 	);
 	
-
 	SkPaint paint_text;
 	paint_text.setAntiAlias(true);
 	paint_text.setStrokeWidth(4);

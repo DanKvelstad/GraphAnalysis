@@ -15,6 +15,8 @@ public:
 	linked_edge(const linked_edge& other);
 	~linked_edge(void);
 
+	const char* get_name();
+
 	void emplace(const char* name, unsigned source, unsigned target);
 	linked_edge* next(void);
 
