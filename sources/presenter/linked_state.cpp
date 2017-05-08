@@ -237,7 +237,7 @@ point linked_state::intersection(const linked_state& target) const
 		}
 	}
 
-	throw std::exception();
+	throw std::logic_error("Line between states does not intersect with source state");
 
 }
 
