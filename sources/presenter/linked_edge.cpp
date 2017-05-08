@@ -61,6 +61,29 @@ linked_edge* linked_edge::next(void)
 	return linked;
 }
 
+point ShortenSegment(point source, point target)
+{
+
+	const float radius(5);
+
+	float dx = static_cast<float>(target.x - source.x);
+	float dy = static_cast<float>(target.y - source.y);
+	float length = std::sqrtf(dx * dx + dy * dy);
+	if (length > 0)
+	{
+		dx /= length;
+		dy /= length;
+	}
+	dx *= length - radius;
+	dy *= length - radius;
+
+	return point{
+		static_cast<scalar>(source.x + dx),
+		static_cast<scalar>(source.y + dy)
+	};
+
+}
+
 void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 {
 
@@ -74,9 +97,8 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 	//       improve the visual impression.
 	auto source_point(states.at(source).intersection(states.at(target)));
 	auto target_point(states.at(target).intersection(states.at(source)));
-
-	// todo: the source and target point should be slightly shorter,
-	//       that would improve the visual impression.
+	source_point = ShortenSegment(target_point, source_point);
+	target_point = ShortenSegment(source_point, target_point);
 
 	canvas->drawLine(
 		static_cast<SkScalar>(source_point.x), 
@@ -96,6 +118,8 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 			static_cast<float>(target_point.x-source_point.x)
 		)
 	);
+
+	// todo: the arrows looks wrong because i do not consider the with of lines
 
 	canvas->drawLine(
 		static_cast<SkScalar>(target_point.x - cosf(line_angle - offset_to_line_angle)*arrowhead_length),
