@@ -150,6 +150,8 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 	// |         |
 	// |        90° 
 	// v y
+
+	const auto text_offset(paint_text.getTextSize() + 5);
 	
 	if ( (0+EPSILON)>line_angle || (2*pi+NEPSILON)<line_angle)
 	{	// 0 degrees, target is to the right
@@ -159,7 +161,7 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 		text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
 		text_box.setBox(
 			static_cast<SkScalar>(source_point.x),
-			static_cast<SkScalar>(source_point.y - paint_text.getTextSize() - 5),
+			static_cast<SkScalar>(source_point.y - text_offset),
 			static_cast<SkScalar>(target_point.x),
 			static_cast<SkScalar>(target_point.y)
 		);
@@ -176,11 +178,9 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 		SkTextBox text_box;
 		text_box.setText(name, strlen(name), paint_text);
 		text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-		// todo: calculate the orthogonal line to the segment 
-		//       and move the text-offset along that instead.
 		text_box.setBox(
-			static_cast<SkScalar>(source_point.x + paint_text.getTextSize()),
-			static_cast<SkScalar>(source_point.y - paint_text.getTextSize()),
+			static_cast<SkScalar>(source_point.x),
+			static_cast<SkScalar>(source_point.y - text_offset),
 			static_cast<SkScalar>(target_point.x),
 			static_cast<SkScalar>(target_point.y)
 		);
@@ -209,11 +209,9 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 		SkTextBox text_box;
 		text_box.setText(name, strlen(name), paint_text);
 		text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-		// todo: calculate the orthogonal line to the segment 
-		//       and move the text-offset along that instead.
 		text_box.setBox(
-			static_cast<SkScalar>(target_point.x + paint_text.getTextSize()),
-			static_cast<SkScalar>(source_point.y - paint_text.getTextSize()),
+			static_cast<SkScalar>(target_point.x),
+			static_cast<SkScalar>(source_point.y - text_offset),
 			static_cast<SkScalar>(source_point.x),
 			static_cast<SkScalar>(target_point.y)
 		);
@@ -228,7 +226,7 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 		text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
 		text_box.setBox(
 			static_cast<SkScalar>(target_point.x),
-			static_cast<SkScalar>(target_point.y - paint_text.getTextSize() - 5),
+			static_cast<SkScalar>(target_point.y - text_offset),
 			static_cast<SkScalar>(source_point.x),
 			static_cast<SkScalar>(source_point.y)
 		);
@@ -245,11 +243,9 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 		SkTextBox text_box;
 		text_box.setText(name, strlen(name), paint_text);
 		text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-		// todo: calculate the orthogonal line to the segment 
-		//       and move the text-offset along that instead.
 		text_box.setBox(
-			static_cast<SkScalar>(target_point.x + paint_text.getTextSize()),
-			static_cast<SkScalar>(target_point.y - paint_text.getTextSize()),
+			static_cast<SkScalar>(target_point.x),
+			static_cast<SkScalar>(target_point.y - text_offset),
 			static_cast<SkScalar>(source_point.x),
 			static_cast<SkScalar>(source_point.y)
 		);
@@ -278,11 +274,9 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 		SkTextBox text_box;
 		text_box.setText(name, strlen(name), paint_text);
 		text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-		// todo: calculate the orthogonal line to the segment 
-		//       and move the text-offset along that instead.
 		text_box.setBox(
-			static_cast<SkScalar>(source_point.x + paint_text.getTextSize()),
-			static_cast<SkScalar>(source_point.y - paint_text.getTextSize()),
+			static_cast<SkScalar>(source_point.x),
+			static_cast<SkScalar>(source_point.y - text_offset),
 			static_cast<SkScalar>(target_point.x),
 			static_cast<SkScalar>(target_point.y)
 		);
