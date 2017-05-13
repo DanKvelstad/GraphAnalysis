@@ -49,3 +49,25 @@ TEST(test_presenter, star)
 	);
 
 }
+
+TEST(test_presenter, circle)
+{
+
+	linked_state states;
+	states.emplace("s0", 1, 1);
+	states.emplace("s1", 1, 0);
+	states.emplace("s2", 0, 1);
+
+	linked_edge edges;
+	edges.emplace("e0", 0, 0);
+	edges.emplace("e1", 1, 0);
+	edges.emplace("e2", 2, 0);
+	edges.emplace("e3", 1, 2);
+
+	draw(
+		temp_directory_path() / "circle.png",
+		states,
+		edges
+	);
+
+}

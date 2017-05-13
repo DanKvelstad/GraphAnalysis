@@ -7,7 +7,7 @@ linked_state::linked_state(unsigned index)
 : index(index)
 , width(100)
 , height(50)
-, spacing(std::min(width, height))
+, spacing(std::max(width, height))
 , data(nullptr)
 , linked(nullptr)
 {
@@ -48,8 +48,8 @@ void linked_state::emplace(const char* name, int x, int y)
 	{
 		data = new state_data(
 			name,
-			x*(width + spacing) + spacing,
-			y*(height + spacing) + spacing,
+			x*width  + (x+1)*spacing,
+			y*height + (y+1)*spacing,
 			width,
 			height
 		);
@@ -85,21 +85,41 @@ const linked_state& linked_state::at(unsigned i) const
 	}
 }
 
-bool contains(point s, point t, float p_x, float p_y)
+bool contains(point s, point t, point p)
 {
 
-	if (s.x == p_x && s.y == p_y)
+	auto equals(
+		[](point a, point b) -> bool
+		{
+			auto equals(
+				[](scalar c, scalar d) -> bool
+				{
+					return c < (d + 1) && (c + 1) < d;
+				}
+			);
+			return equals(a.x, b.x) && equals(a.y, b.y);
+		}
+	);
+
+	auto is_zero(
+		[](scalar n) -> bool
+		{
+			return n < 100 && n > -100;
+		}
+	);
+
+	if (equals(s, p))
 	{	// p is s
 		return true;
 	}
-	else if (t.x == p_x && t.y == p_y)
+	else if (equals(t, p))
 	{	// t is p
 		return true;
 	}
-	else if (0 == ((p_y-s.y)*(t.x-s.x)-(p_x-s.x)*(t.y-s.y)))
+	else if (is_zero((p.y-s.y)*(t.x-s.x)-(p.x-s.x)*(t.y-s.y)))
 	{	// p is on the line, the cross product is zero
 
-		auto dot_product    = (p_x - s.x)*(t.x - s.x) + (p_y - s.y)*(t.y - s.y);
+		auto dot_product    = (p.x - s.x)*(t.x - s.x) + (p.y - s.y)*(t.y - s.y);
 		auto squared_length = (t.x - s.x)*(t.x - s.x) + (t.y - s.y)*(t.y - s.y);
 
 		if (0.0 <= dot_product && dot_product <= squared_length)
@@ -117,65 +137,55 @@ bool contains(point s, point t, float p_x, float p_y)
 		return false;
 	}
 
-
 }
 
-std::pair<bool, point> intersecting_lines(point ts, point tt, point os, point ot)
+std::pair<bool, point> intersecting_lines(point as, point at, point bs, point bt)
 {
 
-	std::pair<bool, point> result;
+	auto result = std::make_pair(
+		false,
+		point{ static_cast<int>(-1), static_cast<int>(-1) }
+	);;
 
 	// https://en.wikipedia.org/wiki/line%E2%80%93line_intersection
 
 	const float denominator = static_cast<float>(
-		(ts.x-tt.x)*(os.y-ot.y)-(ts.y-tt.y)*(os.x-ot.x)
+		(as.x-at.x)*(bs.y-bt.y)-(as.y-at.y)*(bs.x-bt.x)
+	);
+
+	auto is_zero(
+		[](float n) -> bool
+		{
+			const float epsilon(0.001f);
+			return n < epsilon && n > -1*epsilon;
+		}
 	);
 	
-	if(0==denominator)
-	{	// "When the two lines are parallel or coincident the denominator is zero"
-		// this is not what we are searching for here, so just sendback a gravestone
-		result = std::make_pair(
-			false,
-			point{static_cast<int>(-1), static_cast<int>(-1)}
-		);
-	}
-	else
+	if(!is_zero(denominator))
 	{	// They are not parallel
 
-		float intersection_x(
-			( (ts.x*tt.y - ts.y*tt.x)*(os.x-ot.x) - 
-			  (ts.x-tt.x)*(os.x*ot.y - os.y*ot.x) )
-			/ denominator
+		result.second.x = static_cast<scalar>(
+			roundf(
+				( (as.x*at.y - as.y*at.x)*(bs.x-bt.x) -
+				  (as.x-at.x)*(bs.x*bt.y - bs.y*bt.x) )
+				/ denominator
+			)
 		);
-		float intersection_y(
-			( (ts.x*tt.y - ts.y*tt.x)*(os.y-ot.y) - 
-			  (ts.y-tt.y)*(os.x*ot.y - os.y*ot.x) )
-			/ denominator
+		result.second.y = static_cast<scalar>(
+			roundf(
+				( (as.x*at.y - as.y*at.x)*(bs.y-bt.y) - 
+				  (as.y-at.y)*(bs.x*bt.y - bs.y*bt.x) )
+				/ denominator
+			)
 		);
 
 		// " Note that the intersection point is for the infinitely long lines defined 
 		//   by the points, rather than the line segments between the points, and can 
 		//   produce an intersection point beyond the lengths of the line segments. "
 
-		if (contains(ts, tt, intersection_x, intersection_y) &&
-			contains(os, ot, intersection_x, intersection_y))
-		{
-			result = std::make_pair(
-				true,
-				point{
-					static_cast<int>(std::round(intersection_x)),
-					static_cast<int>(std::round(intersection_y))
-				}
-			);
-		}
-		else
-		{
-			result = std::make_pair(
-				false,
-				point{ static_cast<int>(-1), static_cast<int>(-1) }
-			);
-		}
-
+		result.first =	contains(as, at, result.second) &&
+						contains(bs, bt, result.second) ;
+		
 	}
 
 	return result;
@@ -185,10 +195,10 @@ std::pair<bool, point> intersecting_lines(point ts, point tt, point os, point ot
 point linked_state::intersection(const linked_state& target) const
 {
 
-	point center_of_source(data->center);
-	point center_of_target(target.data->center);
+	auto center_of_source(data->center);
+	auto center_of_target(target.data->center);
 
-	{	// left
+	{	// does the line intersect with the left line segment of source
 		auto result = intersecting_lines(
 			point{ data->left,	data->bottom	},
 			point{ data->left,	data->top		},
@@ -200,7 +210,7 @@ point linked_state::intersection(const linked_state& target) const
 			return result.second;
 		}
 	}
-	{	// top
+	{	// does the line intersect with the top line segment of source
 		auto result = intersecting_lines(
 			point{ data->left,	data->top		},
 			point{ data->right,	data->top		},
@@ -212,7 +222,7 @@ point linked_state::intersection(const linked_state& target) const
 			return result.second;
 		}
 	}
-	{	// right
+	{	// does the line intersect with the right line segment of source
 		auto result = intersecting_lines(
 			point{ data->right,	data->top		},
 			point{ data->right,	data->bottom	},
@@ -224,7 +234,7 @@ point linked_state::intersection(const linked_state& target) const
 			return result.second;
 		}
 	}
-	{	// bottom
+	{	// // does the line intersect with the bottom line segment of source
 		auto result = intersecting_lines(
 			point{ data->right,	data->bottom	},
 			point{ data->left,	data->bottom	},
@@ -262,10 +272,10 @@ void linked_state::draw(SkCanvas* canvas) const
 
 	canvas->drawRoundRect(
 		SkRect::MakeLTRB(
-			static_cast<SkScalar>(data->left), 
-			static_cast<SkScalar>(data->top),
-			static_cast<SkScalar>(data->right), 
-			static_cast<SkScalar>(data->bottom)
+			static_cast<SkScalar>(data->left+5), 
+			static_cast<SkScalar>(data->top+5),
+			static_cast<SkScalar>(data->right-5), 
+			static_cast<SkScalar>(data->bottom-5)
 		),
 		10,
 		10,
