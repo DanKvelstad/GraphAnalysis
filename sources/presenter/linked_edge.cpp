@@ -125,6 +125,8 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 	paint_text.setColor(SK_ColorBLACK);
 	paint_text.setTextSize(22.f);
 
+	const auto text_offset(paint_text.getTextSize() + 5);
+
 	const float pi(3.141592653589793238462643383279502884f);
 	const float offset_to_line_angle(pi / 4);
 	const float arrowhead_length(10);
@@ -173,14 +175,17 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 			paint_line
 		);
 
-		paint_text.setTextAlign(SkPaint::Align::kLeft_Align);
-		canvas->drawText(
-			name,
-			strlen(name),
-			static_cast<SkScalar>(source_point.x + 5),
-			static_cast<SkScalar>(source_point.y),
-			paint_text
+		paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
+		SkTextBox text_box;
+		text_box.setText(name, strlen(name), paint_text);
+		text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
+		text_box.setBox(
+			static_cast<SkScalar>(target_point.x - 25),
+			static_cast<SkScalar>(source_point.y - 50),
+			static_cast<SkScalar>(source_point.x),
+			static_cast<SkScalar>(source_point.y - 25 - 5)
 		);
+		text_box.draw(canvas);
 
 	}
 	else
@@ -258,8 +263,6 @@ void linked_edge::draw(SkCanvas* canvas, const linked_state& states) const
 		// |         |
 		// |        90° 
 		// v y
-
-		const auto text_offset(paint_text.getTextSize() + 5);
 
 		if ((0 + EPSILON) > line_angle || (2 * pi + NEPSILON) < line_angle)
 		{	// 0 degrees, target is to the right

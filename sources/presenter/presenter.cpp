@@ -50,8 +50,8 @@ void draw(
 			surface_height = it->get().bottom;
 		}
 	}
-	surface_width  += states.get_spacing();
-	surface_height += states.get_spacing();
+	surface_width  += 50;
+	surface_height += 50;
 
 	int max_edge_length(0);
 	for (auto it(&edges); nullptr != it; it = it->next())
@@ -81,7 +81,8 @@ void draw(
 	{
 		throw std::exception();
 	}
-	
+
+	create_directories(output.parent_path());
 	auto output_string(output.string());
 	SkFILEWStream out(output_string.c_str());
 	(void)out.write(png->data(), png->size());

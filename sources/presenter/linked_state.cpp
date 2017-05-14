@@ -48,8 +48,8 @@ void linked_state::emplace(const char* name, int x, int y)
 	{
 		data = new state_data(
 			name,
-			x*width  + (x+1)*spacing,
-			y*height + (y+1)*spacing,
+			x*width  + x*spacing + 50,
+			y*height + y*spacing + 50,
 			width,
 			height
 		);
