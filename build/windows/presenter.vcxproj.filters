@@ -2,27 +2,53 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\..\sources\presenter\presenter.cpp" />
-    <ClCompile Include="..\..\sources\presenter\linked_state.cpp">
+    <ClCompile Include="..\..\sources\presenter\intersects.cpp">
+      <Filter>algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\presenter\states.cpp">
+      <Filter>dllexports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\presenter\state.cpp">
       <Filter>model</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sources\presenter\linked_edge.cpp">
+    <ClCompile Include="..\..\sources\presenter\edges.cpp">
+      <Filter>dllexports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\presenter\edge.cpp">
       <Filter>model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\sources\presenter\dllexport.h" />
     <ClInclude Include="..\..\sources\presenter\presenter.h" />
-    <ClInclude Include="..\..\sources\presenter\linked_state.h">
-      <Filter>model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sources\presenter\linked_edge.h">
-      <Filter>model</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\sources\presenter\common.h" />
+    <ClInclude Include="..\..\sources\presenter\algorithms.h">
+      <Filter>algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\states.h">
+      <Filter>dllexports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\dllexport.h">
+      <Filter>dllexports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\state.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\edges.h">
+      <Filter>dllexports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\edge.h">
+      <Filter>model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="model">
       <UniqueIdentifier>{51bc35ed-4eb3-442d-a8a8-95edff1ab4fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="algorithms">
+      <UniqueIdentifier>{bb91bff1-ebbd-495d-a405-7ca383f92d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dllexports">
+      <UniqueIdentifier>{c0a8598e-afe0-4e5c-89bd-096955900995}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

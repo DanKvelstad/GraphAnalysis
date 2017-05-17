@@ -1,7 +1,7 @@
 #include "compiler/compiler.h"
 #include "presenter/presenter.h"
-#include "presenter/linked_state.h"
-#include "presenter/linked_edge.h"
+#include "presenter/states.h"
+#include "presenter/edges.h"
 #include <experimental/filesystem>
 #include <iostream>
 #include <fstream>
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 					<< layouting_duration.count() << "ms" << std::endl;
 		std::cout	<< "       " << layout.get_intersection_count() << " intersections" << std::endl;
 
-		linked_state l_states;
+		states l_states;
 		for (auto it(layout.get_knots()); nullptr != it; it = it->next())
 		{
 			l_states.emplace(
@@ -79,13 +79,13 @@ int main(int argc, char* argv[])
 			);
 		}
 
-		linked_edge l_edges;
+		edges l_edges;
 		for (auto it(layout.get_strands()); nullptr!=it; it = it->next())
 		{
 			l_edges.emplace(
-				"...", 
 				it->get_source(),
-				it->get_target()
+				it->get_target(),
+				"..."
 			);
 		}
 

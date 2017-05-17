@@ -27,48 +27,24 @@ extern "C"
 
 void draw(
 	const path&		output,
-	linked_state	states,
-	linked_edge		edges
+	states			the_states,
+	edges			the_edges
 )
 {
 
-	int max_state_length(0);
-	int surface_width(0);
-	int surface_height(0);
-	for (auto it(&states); nullptr!=it; it = it->next())
-	{
-		if (max_state_length<strlen(it->get().name))
-		{
-			max_state_length = static_cast<unsigned>(strlen(it->get().name));
-		}
-		if (surface_width < it->get().right)
-		{
-			surface_width = it->get().right;
-		}
-		if (surface_height < it->get().bottom)
-		{
-			surface_height = it->get().bottom;
-		}
-	}
-	surface_width  += 50;
-	surface_height += 50;
+	auto spacing(the_edges.get_text_dimensions().first);
+	the_states.set_spacing(spacing, spacing);
 
-	int max_edge_length(0);
-	for (auto it(&edges); nullptr != it; it = it->next())
-	{
-		if (max_edge_length<strlen(it->get_name()))
-		{
-			max_edge_length = static_cast<unsigned>(strlen(it->get_name()));
-		}
-	}
-
-	sk_sp<SkSurface> surface(
-		SkSurface::MakeRasterN32Premul(surface_width, surface_height)
+	auto surface(
+		SkSurface::MakeRasterN32Premul(
+			the_states.get_workspace_width(),
+			the_states.get_workspace_height()
+		)
 	);
-
 	surface->getCanvas()->clear(SK_ColorWHITE);
-	states.draw(surface->getCanvas());
-	edges.draw(surface->getCanvas(), states);
+	
+	the_states.draw(*surface->getCanvas());
+	the_edges.draw(*surface->getCanvas(), the_states);
 
 	sk_sp<SkImage> img(surface->makeImageSnapshot());
 	if (!img) 

@@ -19,16 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\sources\presenter\algorithms.h" />
     <ClInclude Include="..\..\sources\presenter\dllexport.h" />
-    <ClInclude Include="..\..\sources\presenter\linked_state.h" />
+    <ClInclude Include="..\..\sources\presenter\edge.h" />
+    <ClInclude Include="..\..\sources\presenter\edges.h" />
     <ClInclude Include="..\..\sources\presenter\presenter.h" />
-    <ClInclude Include="..\..\sources\presenter\linked_edge.h" />
     <ClInclude Include="..\..\sources\presenter\common.h" />
+    <ClInclude Include="..\..\sources\presenter\state.h" />
+    <ClInclude Include="..\..\sources\presenter\states.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\sources\presenter\linked_edge.cpp" />
+    <ClCompile Include="..\..\sources\presenter\edge.cpp" />
+    <ClCompile Include="..\..\sources\presenter\edges.cpp" />
+    <ClCompile Include="..\..\sources\presenter\intersects.cpp" />
     <ClCompile Include="..\..\sources\presenter\presenter.cpp" />
-    <ClCompile Include="..\..\sources\presenter\linked_state.cpp" />
+    <ClCompile Include="..\..\sources\presenter\state.cpp" />
+    <ClCompile Include="..\..\sources\presenter\states.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4676F09B-D796-4DD9-B382-B9E1AE03F16D}</ProjectGuid>
