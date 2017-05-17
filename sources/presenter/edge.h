@@ -19,9 +19,10 @@ public:
 
 	std::pair<unsigned, unsigned> get_text_dimensions(void);
 
-	void draw(SkCanvas& canvas, const states& the_states);
+	void draw(SkCanvas& canvas, const states& the_states, bool single);
 
-	bool equals(const unsigned& other_source, const unsigned& other_target) const;
+	bool equals(unsigned other_source, unsigned other_target) const;
+	bool is_the_opposite_edge(const edge& other) const;
 
 private:
 

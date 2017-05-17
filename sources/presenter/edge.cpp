@@ -54,7 +54,7 @@ std::pair<unsigned, unsigned> edge::get_text_dimensions(void)
 	);
 }
 
-void edge::draw(SkCanvas& canvas, const states& the_states)
+void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 {
 	
 	const auto text_offset(paint_text.getTextSize() + 5);
@@ -66,9 +66,9 @@ void edge::draw(SkCanvas& canvas, const states& the_states)
 	if (source == target)
 	{
 
-		auto data(the_states.region_of_state(source).getBounds());
-		point source_point{ data.left() + 25, data.top() };
-		point target_point{ data.left(), data.top() + 25 };
+		auto region(the_states.region_of_state(source).getBounds());
+		point source_point{ region.left() + 25, region.top() };
+		point target_point{ region.left(), region.top() + 25 };
 
 		canvas.drawArc(
 			SkRect::MakeLTRB(
@@ -122,15 +122,31 @@ void edge::draw(SkCanvas& canvas, const states& the_states)
 	}
 	else
 	{
-
-		auto segment(
-			intersecting_line_segment_between_states(
-				the_states.region_of_state(source).getBounds(),
-				the_states.region_of_state(target).getBounds()
-			)
-		);
-		auto source_point(segment.first);
-		auto target_point(segment.second);
+		point source_point;
+		point target_point;
+		
+		if (single)
+		{
+			auto segment(
+				shortest_line_segment(
+					the_states.get_single_endpoints(source),
+					the_states.get_single_endpoints(target)
+				)
+			);
+			source_point = segment.first;
+			target_point = segment.second;
+		}
+		else
+		{
+			auto segment(
+				shortest_line_segment(
+					the_states.get_double_endpoints_source(source),
+					the_states.get_double_endpoints_target(target)
+				)
+			);
+			source_point = segment.first;
+			target_point = segment.second;
+		}
 
 		canvas.drawLine(
 			static_cast<SkScalar>(source_point.x),
@@ -337,7 +353,12 @@ void edge::draw(SkCanvas& canvas, const states& the_states)
 
 }
 
-bool edge::equals(const unsigned & other_source, const unsigned & other_target) const
+bool edge::equals(unsigned other_source, unsigned other_target) const
 {
 	return source == other_source && target == other_target;
+}
+
+bool edge::is_the_opposite_edge(const edge & other) const
+{
+	return source == other.target && target == other.source;
 }

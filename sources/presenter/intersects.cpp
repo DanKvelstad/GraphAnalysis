@@ -2,6 +2,7 @@
 #include "common.h"
 #include "states.h"
 #include "SkRect.h"
+#include <algorithm>
 
 bool contains(point s, point t, point p)
 {
@@ -110,77 +111,54 @@ std::pair<bool, point> intersecting_line_segments(point as, point at, point bs, 
 
 }
 
-std::pair<point, point> intersecting_line_segment_between_states(const SkIRect& source, const SkIRect& target)
+std::pair<point, point> shortest_line_segment(const std::vector<point>& source, const std::vector<point>& target)
 {
 
-	// todo: i dont really want the intersection, i want the two points 
-	//       where the distance between them is the smallest, that would 
-	//       improve the visual impression.
+	auto shortest_length(std::numeric_limits<double>::max());
+	std::vector<std::pair<point, point>> shortest;
 
-	auto helper(
-		[](const SkIRect& source, point center_of_source, point center_of_target)
+	std::for_each(
+		source.begin(), source.end(),
+		[&](const point& s)
 		{
-		
-			{	// does the line intersect with the left line segment of source
-				auto result = intersecting_line_segments(
-					point{ source.left(), source.bottom()	},
-					point{ source.left(), source.top()		},
-					center_of_source,
-					center_of_target
-				);
-				if (result.first)
+			std::for_each(
+				target.begin(), target.end(),
+				[&](const point& t)
 				{
-					return result.second;
+					auto diff_x(t.x-s.x);
+					auto diff_y(t.y-s.y);
+					auto current_length(std::sqrt(diff_x*diff_x+diff_y*diff_y));
+					if (current_length == shortest_length)
+					{
+						shortest.emplace_back(s, t);
+					}
+					else if (current_length < shortest_length)
+					{
+						shortest.clear();
+						shortest.emplace_back(s, t);
+						shortest_length = current_length;
+					}
 				}
-			}
-			{	// does the line intersect with the top line segment of source
-				auto result = intersecting_line_segments(
-					point{ source.left(),	source.top()		},
-					point{ source.right(),	source.top()		},
-					center_of_source,
-					center_of_target
-				);
-				if (result.first)
-				{
-					return result.second;
-				}
-			}
-			{	// does the line intersect with the right line segment of source
-				auto result = intersecting_line_segments(
-					point{ source.right(),	source.top()	},
-					point{ source.right(),	source.bottom() },
-					center_of_source,
-					center_of_target
-				);
-				if (result.first)
-				{
-					return result.second;
-				}
-			}
-			{	// // does the line intersect with the bottom line segment of source
-				auto result = intersecting_line_segments(
-					point{ source.right(),	source.bottom()	},
-					point{ source.left(),	source.bottom()	},
-					center_of_source,
-					center_of_target
-				);
-				if (result.first)
-				{
-					return result.second;
-				}
-			}
-		
-			throw std::logic_error("Line between states does not intersect with source state");
-
+			);
 		}
 	);
 
-	auto center_of_source(point{ source.centerX(), source.centerY() });
-	auto center_of_target(point{ target.centerX(), target.centerY() });
-
-	return std::make_pair(
-		helper(source, center_of_source, center_of_target),
-		helper(target, center_of_target, center_of_source)
+	std::pair<point, point> result;
+	std::for_each(
+		shortest.begin(), shortest.end(),
+		[&](const std::pair<point, point>& element)
+		{
+			result.first.x  += element.first.x;
+			result.first.y  += element.first.y;
+			result.second.x += element.second.x;
+			result.second.y += element.second.y;
+		}
 	);
-	
+	result.first.x  /= static_cast<unsigned>(shortest.size());
+	result.first.y  /= static_cast<unsigned>(shortest.size());
+	result.second.x /= static_cast<unsigned>(shortest.size());
+	result.second.y /= static_cast<unsigned>(shortest.size());
+
+	return result;
+
 }

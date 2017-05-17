@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dllexport.h"
+#include "common.h"
 #include <string>
 #include <vector>
 
@@ -26,6 +27,10 @@ public:
 
 	SkRegion region_of_state(const state& s) const;
 	SkRegion region_of_state(unsigned i) const;
+
+	std::vector<point> get_single_endpoints(unsigned i) const;
+	std::vector<point> get_double_endpoints_source(unsigned i) const;
+	std::vector<point> get_double_endpoints_target(unsigned i) const;
 
 	void draw(SkCanvas& canvas);
 

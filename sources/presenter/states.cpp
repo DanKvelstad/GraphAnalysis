@@ -99,6 +99,21 @@ SkRegion states::region_of_state(unsigned i) const
 	return region_of_state(my_states.at(i));
 }
 
+std::vector<point> states::get_single_endpoints(unsigned i) const
+{
+	return my_states.at(i).get_single_endpoints(region_of_state(i));
+}
+
+std::vector<point> states::get_double_endpoints_source(unsigned i) const
+{
+	return my_states.at(i).get_double_endpoints_source(region_of_state(i));
+}
+
+std::vector<point> states::get_double_endpoints_target(unsigned i) const
+{
+	return my_states.at(i).get_double_endpoints_target(region_of_state(i));
+}
+
 void states::draw(SkCanvas& canvas)
 {
 

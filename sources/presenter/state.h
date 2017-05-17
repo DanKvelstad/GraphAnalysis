@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include "common.h"
 #include "SkPaint.h"
 
 class SkCanvas;
@@ -19,6 +21,10 @@ public:
 	unsigned get_y(void) const;
 
 	std::pair<unsigned, unsigned> get_text_dimensions(void);
+
+	std::vector<point> get_single_endpoints(const SkRegion& region) const;
+	std::vector<point> get_double_endpoints_source(const SkRegion& region) const;
+	std::vector<point> get_double_endpoints_target(const SkRegion& region) const;
 
 	void draw(SkCanvas& canvas, const SkRegion& region);
 

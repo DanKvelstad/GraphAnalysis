@@ -18,6 +18,7 @@ edges::~edges(void)
 
 void edges::emplace(unsigned source, unsigned target, const std::string & name)
 {
+
 	auto pre_existing_edge(
 		std::find_if(
 			the_edges.begin(), the_edges.end(),
@@ -35,6 +36,7 @@ void edges::emplace(unsigned source, unsigned target, const std::string & name)
 	{
 		pre_existing_edge->add(name);
 	}
+
 }
 
 std::pair<unsigned, unsigned> edges::get_text_dimensions(void)
@@ -61,14 +63,27 @@ std::pair<unsigned, unsigned> edges::get_text_dimensions(void)
 
 void edges::draw(SkCanvas& canvas, const states& the_states)
 {
+
 	std::for_each(
 		the_edges.begin(), the_edges.end(),
-		[&](edge& e)
+		[&](edge& this_edge)
 		{
-			e.draw(
-				canvas, 
-				the_states
+		
+			auto single_edge(
+				the_edges.end() == std::find_if(
+					the_edges.begin(), the_edges.end(),
+					[&](const edge& other_edge) -> bool
+					{
+						return this_edge.is_the_opposite_edge(other_edge);
+					}
+				)
 			);
+			this_edge.draw(
+				canvas,
+				the_states,
+				single_edge
+			);
+			
 		}
 	);
 }
