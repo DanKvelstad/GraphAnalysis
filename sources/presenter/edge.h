@@ -15,13 +15,17 @@ public:
 	edge(const edge& other);
 	~edge(void);
 
+	void add(const std::string& another_name);
+
 	std::pair<unsigned, unsigned> get_text_dimensions(void);
 
 	void draw(SkCanvas& canvas, const states& the_states);
 
+	bool equals(const unsigned& other_source, const unsigned& other_target) const;
+
 private:
 
-	const std::string name;
+	std::string name;
 	unsigned source;
 	unsigned target;
 

@@ -18,7 +18,23 @@ edges::~edges(void)
 
 void edges::emplace(unsigned source, unsigned target, const std::string & name)
 {
-	the_edges.emplace_back(source, target, name);
+	auto pre_existing_edge(
+		std::find_if(
+			the_edges.begin(), the_edges.end(),
+			[&](const edge& existing) -> bool
+			{
+				return existing.equals(source, target);
+			}
+		)	
+	);
+	if (the_edges.end() == pre_existing_edge)
+	{
+		the_edges.emplace_back(source, target, name);
+	}
+	else
+	{
+		pre_existing_edge->add(name);
+	}
 }
 
 std::pair<unsigned, unsigned> edges::get_text_dimensions(void)

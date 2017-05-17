@@ -39,6 +39,11 @@ edge::~edge(void)
 {
 }
 
+void edge::add(const std::string & another_name)
+{
+	name += ", " + another_name;
+}
+
 std::pair<unsigned, unsigned> edge::get_text_dimensions(void)
 {
 	SkRect bounds;
@@ -330,4 +335,9 @@ void edge::draw(SkCanvas& canvas, const states& the_states)
 	
 	}
 
+}
+
+bool edge::equals(const unsigned & other_source, const unsigned & other_target) const
+{
+	return source == other_source && target == other_target;
 }
