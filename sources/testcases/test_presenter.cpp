@@ -9,7 +9,7 @@ path output(std::string name)
 	return temp_directory_path() / "google_test" / (name + ".png");
 }
 
-TEST(test_presenter, simple)
+TEST(test_presenter, square)
 {
 
 	states states;
@@ -19,10 +19,14 @@ TEST(test_presenter, simple)
 	states.emplace("s3", 0, 1);
 	
 	edges edges;
-	edges.emplace(0, 1, "e0");
-	edges.emplace(1, 2, "e1");
-	edges.emplace(2, 3, "e2");
-	edges.emplace(3, 0, "e3");
+	edges.emplace(0, 1, "forward");
+	edges.emplace(1, 0, "backward");
+	edges.emplace(1, 2, "forward");
+	edges.emplace(2, 1, "backward");
+	edges.emplace(2, 3, "forward");
+	edges.emplace(3, 2, "backward");
+	edges.emplace(3, 0, "forward");
+	edges.emplace(0, 3, "backward");
 	
 	draw(
 		output(test_info_->name()),
@@ -43,29 +47,14 @@ TEST(test_presenter, star)
 	states.emplace("s4", 2, 2);
 
 	edges edges;
-	edges.emplace(0, 1, "e0");
-	edges.emplace(0, 2, "e1");
-	edges.emplace(0, 3, "e2");
-	edges.emplace(0, 4, "e3");
-
-	draw(
-		output(test_info_->name()),
-		states,
-		edges
-	);
-
-}
-
-TEST(test_presenter, bidirectional)
-{
-
-	states states;
-	states.emplace("s0", 0, 0);
-	states.emplace("s1", 1, 0);
-
-	edges edges;
-	edges.emplace(0, 1, "e0");
-	edges.emplace(1, 0, "e1");
+	edges.emplace(0, 1, "forward");
+	edges.emplace(1, 0, "backward");
+	edges.emplace(0, 2, "forward");
+	edges.emplace(2, 0, "backward");
+	edges.emplace(0, 3, "forward");
+	edges.emplace(3, 0, "backward");
+	edges.emplace(0, 4, "forward");
+	edges.emplace(4, 0, "backward");
 
 	draw(
 		output(test_info_->name()),

@@ -4,11 +4,12 @@
 #include <vector>
 #include "common.h"
 #include "SkPaint.h"
+#include "shape.h"
 
 class SkCanvas;
 class SkRegion;
 
-class state
+class state : shape
 {
 
 public:
@@ -22,11 +23,9 @@ public:
 
 	std::pair<unsigned, unsigned> get_text_dimensions(void);
 
-	std::vector<point> get_single_endpoints(const SkRegion& region) const;
-	std::vector<point> get_double_endpoints_source(const SkRegion& region) const;
-	std::vector<point> get_double_endpoints_target(const SkRegion& region) const;
+	point get_endpoint(const SkRegion& region, endpoint_select select, endpoint_duplex endpoint) const override;
 
-	void draw(SkCanvas& canvas, const SkRegion& region);
+	void draw(SkCanvas& canvas, const SkRegion& region) override;
 
 private:
 

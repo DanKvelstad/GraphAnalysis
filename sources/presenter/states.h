@@ -4,6 +4,7 @@
 #include "common.h"
 #include <string>
 #include <vector>
+#include "shape.h"
 
 class state;
 class SkCanvas;
@@ -28,9 +29,8 @@ public:
 	SkRegion region_of_state(const state& s) const;
 	SkRegion region_of_state(unsigned i) const;
 
-	std::vector<point> get_single_endpoints(unsigned i) const;
-	std::vector<point> get_double_endpoints_source(unsigned i) const;
-	std::vector<point> get_double_endpoints_target(unsigned i) const;
+	enum class states_duplex{ unidirectional_source, unidirectional_target, bidirectional_source, bidirectional_target };
+	point get_endpoint(unsigned source, unsigned target, states_duplex duplex) const;
 
 	void draw(SkCanvas& canvas);
 

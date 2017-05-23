@@ -56,14 +56,13 @@ std::pair<unsigned, unsigned> state::get_text_dimensions(void)
 	);
 }
 
-std::vector<point> state::get_single_endpoints(const SkRegion& region) const
+
+point get_single_endpoints(const SkRegion& region, shape::endpoint_select select)
 {
 
-	std::vector<point> endpoints;
-	
 	auto margin(region.getBounds());
 
-	// 3X   X4X   X5
+	// 3X   X4X   X10
 	// X           X
 	//		    
 	// X           X
@@ -73,27 +72,36 @@ std::vector<point> state::get_single_endpoints(const SkRegion& region) const
 	// X           X
 	// 1X   X8X   X7
 
-	endpoints.emplace_back( margin.left()    , margin.bottom()  );
-	endpoints.emplace_back( margin.left()    , margin.centerY() );
-	endpoints.emplace_back( margin.left()    , margin.top()     );
-	endpoints.emplace_back( margin.centerX() , margin.top()     );
-	endpoints.emplace_back( margin.right()   , margin.top()     );
-	endpoints.emplace_back( margin.right()   , margin.centerY() );
-	endpoints.emplace_back( margin.right()   , margin.bottom()  );
-	endpoints.emplace_back( margin.centerX() , margin.bottom()  );
-
-	return endpoints;
+	switch (select)
+	{
+	case shape::endpoint_select::left:
+		return point{ margin.left(), margin.centerY() };
+	case shape::endpoint_select::top_left:
+		return point{ margin.left(), margin.top() };
+	case shape::endpoint_select::top:
+		return point{ margin.centerX(), margin.top() };
+	case shape::endpoint_select::top_right:
+		return point{ margin.right(), margin.top() };
+	case shape::endpoint_select::right:
+		return point{ margin.right(), margin.centerY() };
+	case shape::endpoint_select::bottom_right:
+		return point{ margin.right(), margin.bottom() };
+	case shape::endpoint_select::bottom:
+		return point{ margin.centerX(), margin.bottom() };
+	case shape::endpoint_select::bottom_left:
+		return point{ margin.left(), margin.bottom() };
+	default:
+		throw std::exception();
+	}
 
 }
 
-std::vector<point> state::get_double_endpoints_source(const SkRegion& region) const
+point get_double_endpoints_source(const SkRegion& region, shape::endpoint_select select)
 {
 
-	std::vector<point> endpoints;
-	
 	auto margin(region.getBounds());
 
-	// XX   XX4   5X
+	// XX   XX4   10X
 	// 3           X
 	//		    
 	// X           6
@@ -103,28 +111,37 @@ std::vector<point> state::get_double_endpoints_source(const SkRegion& region) co
 	// X           7
 	// X1   8XX   XX
 
-	endpoints.emplace_back( margin.left()    + 5 , margin.bottom()      );
-	endpoints.emplace_back( margin.left()        , margin.centerY() + 5 );
-	endpoints.emplace_back( margin.left()        , margin.top()     + 5 );
-	endpoints.emplace_back( margin.centerX() + 5 , margin.top()         );
-	endpoints.emplace_back( margin.right()   - 5 , margin.top()         );
-	endpoints.emplace_back( margin.right()       , margin.centerY() - 5 );
-	endpoints.emplace_back( margin.right()       , margin.bottom()  - 5 );
-	endpoints.emplace_back( margin.centerX() - 5 , margin.bottom()      );
-
-	return endpoints;
+	switch (select)
+	{
+	case shape::endpoint_select::left:
+		return point{ margin.left(), margin.centerY() + 10 };
+	case shape::endpoint_select::top_left:
+		return point{ margin.left(), margin.top() + 10 };
+	case shape::endpoint_select::top:
+		return point{ margin.centerX() + 10, margin.top() };
+	case shape::endpoint_select::top_right:
+		return point{ margin.right() - 10, margin.top() };
+	case shape::endpoint_select::right:
+		return point{ margin.right(), margin.centerY() - 10 };
+	case shape::endpoint_select::bottom_right:
+		return point{ margin.right(), margin.bottom() - 10 };
+	case shape::endpoint_select::bottom:
+		return point{ margin.centerX() - 10  , margin.bottom() };
+	case shape::endpoint_select::bottom_left:
+		return point{ margin.left() + 10, margin.bottom() };
+	default:
+		throw std::exception();
+	}
 
 }
 
-std::vector<point> state::get_double_endpoints_target(const SkRegion& region) const
+point get_double_endpoints_target(const SkRegion& region, shape::endpoint_select select)
 {
-
-	std::vector<point> endpoints;
 
 	auto margin(region.getBounds());
 
 	// X3   4XX   XX
-	// X           5
+	// X           10
 	//
 	// 2           X
 	// X           X
@@ -133,16 +150,44 @@ std::vector<point> state::get_double_endpoints_target(const SkRegion& region) co
 	// 1           X
 	// Xx   XX8   7X
 	
-	endpoints.emplace_back( margin.left()        , margin.bottom()  - 5 );
-	endpoints.emplace_back( margin.left()        , margin.centerY() - 5 );
-	endpoints.emplace_back( margin.left()    + 5 , margin.top()         );
-	endpoints.emplace_back( margin.centerX() - 5 , margin.top()         );
-	endpoints.emplace_back( margin.right()       , margin.top()     + 5 );
-	endpoints.emplace_back( margin.right()       , margin.centerY() + 5 );
-	endpoints.emplace_back( margin.right()   - 5 , margin.bottom()      );
-	endpoints.emplace_back( margin.centerX() + 5 , margin.bottom()      );
+	switch (select)
+	{
+	case shape::endpoint_select::left:
+		return point{ margin.left(), margin.centerY() - 10 };
+	case shape::endpoint_select::top_left:
+		return point{ margin.left() + 10, margin.top() };
+	case shape::endpoint_select::top:
+		return point{ margin.centerX() - 10, margin.top() };
+	case shape::endpoint_select::top_right:
+		return point{ margin.right(), margin.top() + 10 };
+	case shape::endpoint_select::right:
+		return point{ margin.right(), margin.centerY() + 10 };
+	case shape::endpoint_select::bottom_right:
+		return point{ margin.right() - 10, margin.bottom() };
+	case shape::endpoint_select::bottom:
+		return point{ margin.centerX() + 10, margin.bottom() };
+	case shape::endpoint_select::bottom_left:
+		return point{ margin.left(), margin.bottom() - 10 };
+	default:
+		throw std::exception();
+	}
 
-	return endpoints;
+}
+
+point state::get_endpoint(const SkRegion & region, endpoint_select select, endpoint_duplex endpoint) const
+{
+
+	switch (endpoint)
+	{
+	case shape::endpoint_duplex::single:
+		return get_single_endpoints(region, select);
+	case shape::endpoint_duplex::source:
+		return get_double_endpoints_source(region, select);
+	case shape::endpoint_duplex::target:
+		return get_double_endpoints_target(region, select);
+	default:
+		throw std::exception();
+	}
 
 }
 

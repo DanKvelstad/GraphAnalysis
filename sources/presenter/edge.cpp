@@ -57,7 +57,7 @@ std::pair<unsigned, unsigned> edge::get_text_dimensions(void)
 void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 {
 	
-	const auto text_offset(paint_text.getTextSize() + 5);
+	const auto text_offset(paint_text.getTextSize());
 
 	const float pi(3.141592653589793238462643383279502884f);
 	const float offset_to_line_angle(pi / 4);
@@ -127,25 +127,13 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 		
 		if (single)
 		{
-			auto segment(
-				shortest_line_segment(
-					the_states.get_single_endpoints(source),
-					the_states.get_single_endpoints(target)
-				)
-			);
-			source_point = segment.first;
-			target_point = segment.second;
+			source_point = the_states.get_endpoint(source, target, states::states_duplex::unidirectional_source);
+			target_point = the_states.get_endpoint(source, target, states::states_duplex::unidirectional_target);
 		}
 		else
 		{
-			auto segment(
-				shortest_line_segment(
-					the_states.get_double_endpoints_source(source),
-					the_states.get_double_endpoints_target(target)
-				)
-			);
-			source_point = segment.first;
-			target_point = segment.second;
+			source_point = the_states.get_endpoint(source, target, states::states_duplex::bidirectional_source);
+			target_point = the_states.get_endpoint(source, target, states::states_duplex::bidirectional_target);
 		}
 
 		canvas.drawLine(
@@ -224,7 +212,7 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 				static_cast<SkScalar>(source_point.x),
 				static_cast<SkScalar>(source_point.y - text_offset),
 				static_cast<SkScalar>(target_point.x),
-				static_cast<SkScalar>(target_point.y)
+				static_cast<SkScalar>(target_point.y - 5)
 			);
 			text_box.draw(&canvas);
 		}
@@ -243,7 +231,7 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 				static_cast<SkScalar>(source_point.x),
 				static_cast<SkScalar>(source_point.y - text_offset),
 				static_cast<SkScalar>(target_point.x),
-				static_cast<SkScalar>(target_point.y)
+				static_cast<SkScalar>(target_point.y - 5)
 			);
 			text_box.draw(&canvas);
 			canvas.resetMatrix();
@@ -251,13 +239,27 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 		else if ((pi / 2 + EPSILON) > line_angle)
 		{	// 90 degreees, target is below but its y is larger
 			paint_text.setTextAlign(SkPaint::Align::kLeft_Align);
-			canvas.drawText(
-				name.c_str(), 
-				name.length(),
-				static_cast<SkScalar>(source_point.x + 5),
-				static_cast<SkScalar>(source_point.y - (source_point.y - target_point.y) / 2) + paint_text.getTextSize() / 4,
-				paint_text
-			);
+			if (single)
+			{
+				canvas.drawText(
+					name.c_str(),
+					name.length(),
+					static_cast<SkScalar>(source_point.x + 5),
+					static_cast<SkScalar>(source_point.y - (source_point.y - target_point.y) / 2) + paint_text.getTextSize() / 4,
+					paint_text
+				);
+			}
+			else
+			{
+				paint_text.setTextAlign(SkPaint::Align::kRight_Align);
+				canvas.drawText(
+					name.c_str(),
+					name.length(),
+					static_cast<SkScalar>(source_point.x - 5),
+					static_cast<SkScalar>(source_point.y - (source_point.y - target_point.y) / 2) + paint_text.getTextSize() / 4,
+					paint_text
+				);
+			}
 		}
 		else if ((pi + NEPSILON) > line_angle)
 		{	// between 90 and 180 degrees
@@ -270,12 +272,24 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 			SkTextBox text_box;
 			text_box.setText(name.c_str(), name.length(), paint_text); 
 			text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-			text_box.setBox(
-				static_cast<SkScalar>(target_point.x),
-				static_cast<SkScalar>(source_point.y - text_offset),
-				static_cast<SkScalar>(source_point.x),
-				static_cast<SkScalar>(target_point.y)
-			);
+			if (single)
+			{
+				text_box.setBox(
+					static_cast<SkScalar>(target_point.x),
+					static_cast<SkScalar>(source_point.y - text_offset),
+					static_cast<SkScalar>(source_point.x),
+					static_cast<SkScalar>(target_point.y - 5)
+				);
+			}
+			else
+			{
+				text_box.setBox(
+					static_cast<SkScalar>(target_point.x),
+					static_cast<SkScalar>(source_point.y + 5),
+					static_cast<SkScalar>(source_point.x),
+					static_cast<SkScalar>(target_point.y + text_offset)
+				);
+			}
 			text_box.draw(&canvas);
 			canvas.resetMatrix();
 		}
@@ -285,12 +299,24 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 			SkTextBox text_box;
 			text_box.setText(name.c_str(), name.length(), paint_text); 
 			text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-			text_box.setBox(
-				static_cast<SkScalar>(target_point.x),
-				static_cast<SkScalar>(target_point.y - text_offset),
-				static_cast<SkScalar>(source_point.x),
-				static_cast<SkScalar>(source_point.y)
-			);
+			if (single)
+			{
+				text_box.setBox(
+					static_cast<SkScalar>(target_point.x),
+					static_cast<SkScalar>(target_point.y - text_offset),
+					static_cast<SkScalar>(source_point.x),
+					static_cast<SkScalar>(source_point.y - 5)
+				);
+			}
+			else
+			{
+				text_box.setBox(
+					static_cast<SkScalar>(target_point.x),
+					static_cast<SkScalar>(target_point.y + 5),
+					static_cast<SkScalar>(source_point.x),
+					static_cast<SkScalar>(source_point.y + text_offset)
+				);
+			}
 			text_box.draw(&canvas);
 		}
 		else if ((3 * pi / 2 + NEPSILON) > line_angle)
@@ -306,9 +332,9 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 			text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
 			text_box.setBox(
 				static_cast<SkScalar>(target_point.x),
-				static_cast<SkScalar>(target_point.y - text_offset),
+				static_cast<SkScalar>(target_point.y + 5),
 				static_cast<SkScalar>(source_point.x),
-				static_cast<SkScalar>(source_point.y)
+				static_cast<SkScalar>(source_point.y + text_offset)
 			);
 			text_box.draw(&canvas);
 			canvas.resetMatrix();
@@ -339,7 +365,7 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 				static_cast<SkScalar>(source_point.x),
 				static_cast<SkScalar>(source_point.y - text_offset),
 				static_cast<SkScalar>(target_point.x),
-				static_cast<SkScalar>(target_point.y)
+				static_cast<SkScalar>(target_point.y - 5)
 			);
 			text_box.draw(&canvas);
 			canvas.resetMatrix();

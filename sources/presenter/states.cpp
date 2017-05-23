@@ -99,19 +99,108 @@ SkRegion states::region_of_state(unsigned i) const
 	return region_of_state(my_states.at(i));
 }
 
-std::vector<point> states::get_single_endpoints(unsigned i) const
+point states::get_endpoint(unsigned source, unsigned target, states_duplex duplex) const
 {
-	return my_states.at(i).get_single_endpoints(region_of_state(i));
-}
 
-std::vector<point> states::get_double_endpoints_source(unsigned i) const
-{
-	return my_states.at(i).get_double_endpoints_source(region_of_state(i));
-}
+	shape::endpoint_duplex	desired_duplex;
+	unsigned				desired_index;
+	SkIRect					desired_bounds;
+	SkIRect					undesired_bounds;
+	switch (duplex)
+	{
+	case states::states_duplex::unidirectional_source:
+		desired_duplex		= shape::endpoint_duplex::single;
+		desired_index		= source;
+		desired_bounds		= region_of_state(source).getBounds();
+		undesired_bounds	= region_of_state(target).getBounds();
+		break;
+	case states::states_duplex::unidirectional_target:
+		desired_duplex		= shape::endpoint_duplex::single;
+		desired_index		= target;
+		desired_bounds		= region_of_state(target).getBounds();
+		undesired_bounds	= region_of_state(source).getBounds();
+		break;
+	case states::states_duplex::bidirectional_source:
+		desired_duplex		= shape::endpoint_duplex::source;
+		desired_index		= source;
+		desired_bounds		= region_of_state(source).getBounds();
+		undesired_bounds	= region_of_state(target).getBounds();
+		break;
+	case states::states_duplex::bidirectional_target:
+		desired_duplex		= shape::endpoint_duplex::target;
+		desired_index		= target;
+		desired_bounds		= region_of_state(target).getBounds();
+		undesired_bounds	= region_of_state(source).getBounds();
+		break;
+	default:
+		throw std::exception();
+	}
 
-std::vector<point> states::get_double_endpoints_target(unsigned i) const
-{
-	return my_states.at(i).get_double_endpoints_target(region_of_state(i));
+	shape::endpoint_select desired_select;
+	if (desired_bounds.centerX() < undesired_bounds.centerX())
+	{
+		if (desired_bounds.centerY() < undesired_bounds.centerY())
+		{
+			desired_select = shape::endpoint_select::bottom_right;
+		}
+		else if (desired_bounds.centerY() == undesired_bounds.centerY())
+		{
+			desired_select = shape::endpoint_select::right;
+		}
+		else if (desired_bounds.centerY() > undesired_bounds.centerY())
+		{
+			desired_select = shape::endpoint_select::top_right;
+		}
+		else 
+		{
+			throw std::exception();
+		}
+	}
+	else if (desired_bounds.centerX() == undesired_bounds.centerX())
+	{
+		if (desired_bounds.centerY() < undesired_bounds.centerY())
+		{
+			desired_select = shape::endpoint_select::bottom;
+		}
+		else if (desired_bounds.centerY() > undesired_bounds.centerY())
+		{
+			desired_select = shape::endpoint_select::top;
+		}
+		else
+		{
+			throw std::exception();
+		}
+	}
+	else if (desired_bounds.centerX() > undesired_bounds.centerX())
+	{
+		if (desired_bounds.centerY() < undesired_bounds.centerY())
+		{
+			desired_select = shape::endpoint_select::bottom_left;
+		}
+		else if (desired_bounds.centerY() == undesired_bounds.centerY())
+		{
+			desired_select = shape::endpoint_select::left;
+		}
+		else if (desired_bounds.centerY() > undesired_bounds.centerY())
+		{
+			desired_select = shape::endpoint_select::top_left;
+		}
+		else
+		{
+			throw std::exception();
+		}
+	}
+	else
+	{
+		throw std::exception();
+	}
+
+	return my_states.at(desired_index).get_endpoint(
+		region_of_state(desired_index), 
+		desired_select, 
+		desired_duplex
+	);
+
 }
 
 void states::draw(SkCanvas& canvas)

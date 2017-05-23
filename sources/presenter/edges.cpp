@@ -86,4 +86,5 @@ void edges::draw(SkCanvas& canvas, const states& the_states)
 			
 		}
 	);
+
 }

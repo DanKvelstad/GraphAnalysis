@@ -25,6 +25,7 @@
     <ClInclude Include="..\..\sources\presenter\edges.h" />
     <ClInclude Include="..\..\sources\presenter\presenter.h" />
     <ClInclude Include="..\..\sources\presenter\common.h" />
+    <ClInclude Include="..\..\sources\presenter\shape.h" />
     <ClInclude Include="..\..\sources\presenter\state.h" />
     <ClInclude Include="..\..\sources\presenter\states.h" />
   </ItemGroup>
