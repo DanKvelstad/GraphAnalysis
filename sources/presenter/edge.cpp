@@ -2,6 +2,7 @@
 #include "states.h"
 #include "common.h"
 #include "algorithms.h"
+#include <algorithm>
 #include "SkCanvas.h"
 #include "SkTextBox.h"
 #include "SkRegion.h"
@@ -23,6 +24,7 @@ edge::edge(unsigned source, unsigned target, const std::string & name)
 	paint_text.setStrokeWidth(4);
 	paint_text.setColor(SK_ColorBLACK);
 	paint_text.setTextSize(22.f);
+	paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
 
 }
 
@@ -137,7 +139,7 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 	{
 		point source_point;
 		point target_point;
-		
+
 		if (single)
 		{
 			source_point = the_states.get_endpoint(source, target, states::states_duplex::unidirectional_source);
@@ -188,14 +190,9 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 			paint_line
 		);
 
-		target_point = intersecting_line_segments(source_point, target_point, a1, a2).second;
-
 		auto diff_x(source_point.x - target_point.x);
 		auto diff_y(source_point.y - target_point.y);
 		auto line_length(std::sqrt(diff_x*diff_x + diff_y*diff_y));
-
-		const float EPSILON(0.0001f);
-		const float NEPSILON(-1 * EPSILON);
 
 		// the angle is in the range [0:pi] and [0:-pi],
 		// we need it to be in the range [0:2pi]
@@ -215,179 +212,58 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 		// |        90° 
 		// v y
 
-		if ((0 + EPSILON) > line_angle || (2 * pi + NEPSILON) < line_angle)
-		{	// 0 degrees, target is to the right
-			paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
-			SkTextBox text_box;
-			text_box.setText(name.c_str(), name.length(), paint_text);
-			text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-			text_box.setBox(
-				static_cast<SkScalar>(source_point.x),
-				static_cast<SkScalar>(source_point.y - text_offset),
-				static_cast<SkScalar>(target_point.x),
-				static_cast<SkScalar>(target_point.y - 5)
-			);
-			text_box.draw(&canvas);
-		}
-		else if ((pi / 2 + NEPSILON) > line_angle)
-		{	// Between zero and 90 degrees
-			canvas.rotate(
-				static_cast<SkScalar>(line_angle * 180 / pi),
-				static_cast<SkScalar>(source_point.x + (target_point.x - source_point.x) / 2),
-				static_cast<SkScalar>(source_point.y + (target_point.y - source_point.y) / 2)
-			);
-			paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
-			SkTextBox text_box;
-			text_box.setText(name.c_str(), name.length(), paint_text);
-			text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-			text_box.setBox(
-				static_cast<SkScalar>(source_point.x),
-				static_cast<SkScalar>(source_point.y - text_offset),
-				static_cast<SkScalar>(target_point.x),
-				static_cast<SkScalar>(target_point.y - 5)
-			);
-			text_box.draw(&canvas);
-			canvas.resetMatrix();
-		}
-		else if ((pi / 2 + EPSILON) > line_angle)
-		{	// 90 degreees, target is below but its y is larger
-			paint_text.setTextAlign(SkPaint::Align::kLeft_Align);
-			if (single)
-			{
-				canvas.drawText(
-					name.c_str(),
-					name.length(),
-					static_cast<SkScalar>(source_point.x + 5),
-					static_cast<SkScalar>(source_point.y - (source_point.y - target_point.y) / 2) + paint_text.getTextSize() / 4,
-					paint_text
-				);
-			}
-			else
-			{
-				paint_text.setTextAlign(SkPaint::Align::kRight_Align);
-				canvas.drawText(
-					name.c_str(),
-					name.length(),
-					static_cast<SkScalar>(source_point.x - 5),
-					static_cast<SkScalar>(source_point.y - (source_point.y - target_point.y) / 2) + paint_text.getTextSize() / 4,
-					paint_text
-				);
-			}
-		}
-		else if ((pi + NEPSILON) > line_angle)
-		{	// between 90 and 180 degrees
-			canvas.rotate(
-				static_cast<SkScalar>(line_angle * 180 / pi - 180),
-				static_cast<SkScalar>(target_point.x + (source_point.x - target_point.x) / 2),
-				static_cast<SkScalar>(target_point.y + (source_point.y - target_point.y) / 2)
-			);
-			paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
-			SkTextBox text_box;
-			text_box.setText(name.c_str(), name.length(), paint_text); 
-			text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-			if (single)
-			{
-				text_box.setBox(
-					static_cast<SkScalar>(target_point.x),
-					static_cast<SkScalar>(source_point.y - text_offset),
-					static_cast<SkScalar>(source_point.x),
-					static_cast<SkScalar>(target_point.y - 5)
-				);
-			}
-			else
-			{
-				text_box.setBox(
-					static_cast<SkScalar>(target_point.x),
-					static_cast<SkScalar>(source_point.y + 5),
-					static_cast<SkScalar>(source_point.x),
-					static_cast<SkScalar>(target_point.y + text_offset)
-				);
-			}
-			text_box.draw(&canvas);
-			canvas.resetMatrix();
-		}
-		else if ((pi + EPSILON) > line_angle)
-		{	// 180 degrees, target is to the left
-			paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
-			SkTextBox text_box;
-			text_box.setText(name.c_str(), name.length(), paint_text); 
-			text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-			if (single)
-			{
-				text_box.setBox(
-					static_cast<SkScalar>(target_point.x),
-					static_cast<SkScalar>(target_point.y - text_offset),
-					static_cast<SkScalar>(source_point.x),
-					static_cast<SkScalar>(source_point.y - 5)
-				);
-			}
-			else
-			{
-				text_box.setBox(
-					static_cast<SkScalar>(target_point.x),
-					static_cast<SkScalar>(target_point.y + 5),
-					static_cast<SkScalar>(source_point.x),
-					static_cast<SkScalar>(source_point.y + text_offset)
-				);
-			}
-			text_box.draw(&canvas);
-		}
-		else if ((3 * pi / 2 + NEPSILON) > line_angle)
-		{	// between 180 and 270 degrees
-			canvas.rotate(
-				static_cast<SkScalar>(line_angle * 180 / pi - 180),
-				static_cast<SkScalar>(target_point.x + (source_point.x - target_point.x) / 2),
-				static_cast<SkScalar>(target_point.y + (source_point.y - target_point.y) / 2)
-			);
-			paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
-			SkTextBox text_box;
-			text_box.setText(name.c_str(), name.length(), paint_text);
-			text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-			text_box.setBox(
-				static_cast<SkScalar>(target_point.x),
-				static_cast<SkScalar>(target_point.y + 5),
-				static_cast<SkScalar>(source_point.x),
-				static_cast<SkScalar>(source_point.y + text_offset)
-			);
-			text_box.draw(&canvas);
-			canvas.resetMatrix();
-		}
-		else if ((3 * pi / 2 + EPSILON) > line_angle)
-		{	// 270 degrees, the target is above and its y is smaller
-			paint_text.setTextAlign(SkPaint::Align::kLeft_Align);
-			canvas.drawText(
-				name.c_str(),
-				name.length(),
-				static_cast<SkScalar>(source_point.x + 5),
-				static_cast<SkScalar>(source_point.y + (target_point.y - source_point.y) / 2) + paint_text.getTextSize() / 4,
-				paint_text
-			);
-		}
-		else if ((2 * pi + NEPSILON) > line_angle)
-		{	// between 270 and 360 degrees
-			canvas.rotate(
-				static_cast<SkScalar>(line_angle * 180 / pi),
-				static_cast<SkScalar>(source_point.x + (target_point.x - source_point.x) / 2),
-				static_cast<SkScalar>(source_point.y + (target_point.y - source_point.y) / 2)
-			);
-			paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
-			SkTextBox text_box;
-			text_box.setText(name.c_str(), name.length(), paint_text);
-			text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-			text_box.setBox(
-				static_cast<SkScalar>(source_point.x),
-				static_cast<SkScalar>(source_point.y - text_offset),
-				static_cast<SkScalar>(target_point.x),
-				static_cast<SkScalar>(target_point.y - 5)
-			);
-			text_box.draw(&canvas);
-			canvas.resetMatrix();
+		const float EPSILON(0.001f);
+		const float NEPSILON(-1 * EPSILON);
+
+		point text_center{
+			std::min(source_point.x, target_point.x) + std::abs(source_point.x - target_point.x) / 2,
+			std::min(source_point.y, target_point.y) + std::abs(source_point.y - target_point.y) / 2
+		};
+
+		if ((pi/2.0f-EPSILON) < line_angle && (3.0f*pi/2-EPSILON) > line_angle)
+		{
+
+			// flip the line angle so that the text is written on the other side
+			line_angle += pi;
+			
+			auto text_angle(line_angle + pi/2);
+			float text_hypotenuse = static_cast<float>(paint_text.getTextSize());
+			float text_opposite = std::cosf(text_angle)*text_hypotenuse;
+			float text_adjacent = std::sinf(text_angle)*text_hypotenuse;
+
+			text_center.x = static_cast<scalar>(text_center.x + text_opposite);
+			text_center.y = static_cast<scalar>(text_center.y + text_adjacent);
+
 		}
 		else
 		{
-			throw std::logic_error("not all angles are covered");
+
+			auto text_angle(line_angle - pi/2);
+			float text_hypotenuse = 5;
+			float text_opposite = std::cosf(text_angle)*text_hypotenuse;
+			float text_adjacent = std::sinf(text_angle)*text_hypotenuse;
+
+			text_center.x = static_cast<scalar>(text_center.x + text_opposite);
+			text_center.y = static_cast<scalar>(text_center.y + text_adjacent);
+
 		}
-	
+
+		canvas.rotate(
+			static_cast<SkScalar>(line_angle*180/pi),
+			static_cast<SkScalar>(text_center.x),
+			static_cast<SkScalar>(text_center.y)
+		);
+
+		canvas.drawText(
+			name.c_str(),
+			name.length(),
+			static_cast<SkScalar>(text_center.x),
+			static_cast<SkScalar>(text_center.y),
+			paint_text
+		);
+
+		canvas.resetMatrix();
+
 	}
 
 }

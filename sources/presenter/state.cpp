@@ -118,7 +118,7 @@ point get_double_endpoints_source(const SkRegion& region, shape::endpoint_select
 	case shape::endpoint_select::top_left:
 		return point{ margin.left(), margin.top() + 10 };
 	case shape::endpoint_select::top:
-		return point{ margin.centerX() + 10, margin.top() };
+		return point{ margin.centerX() - 10, margin.top() };
 	case shape::endpoint_select::top_right:
 		return point{ margin.right() - 10, margin.top() };
 	case shape::endpoint_select::right:
@@ -126,7 +126,7 @@ point get_double_endpoints_source(const SkRegion& region, shape::endpoint_select
 	case shape::endpoint_select::bottom_right:
 		return point{ margin.right(), margin.bottom() - 10 };
 	case shape::endpoint_select::bottom:
-		return point{ margin.centerX() - 10  , margin.bottom() };
+		return point{ margin.centerX() + 10  , margin.bottom() };
 	case shape::endpoint_select::bottom_left:
 		return point{ margin.left() + 10, margin.bottom() };
 	default:
@@ -157,7 +157,7 @@ point get_double_endpoints_target(const SkRegion& region, shape::endpoint_select
 	case shape::endpoint_select::top_left:
 		return point{ margin.left() + 10, margin.top() };
 	case shape::endpoint_select::top:
-		return point{ margin.centerX() - 10, margin.top() };
+		return point{ margin.centerX() + 10, margin.top() };
 	case shape::endpoint_select::top_right:
 		return point{ margin.right(), margin.top() + 10 };
 	case shape::endpoint_select::right:
@@ -165,7 +165,7 @@ point get_double_endpoints_target(const SkRegion& region, shape::endpoint_select
 	case shape::endpoint_select::bottom_right:
 		return point{ margin.right() - 10, margin.bottom() };
 	case shape::endpoint_select::bottom:
-		return point{ margin.centerX() + 10, margin.bottom() };
+		return point{ margin.centerX() - 10, margin.bottom() };
 	case shape::endpoint_select::bottom_left:
 		return point{ margin.left(), margin.bottom() - 10 };
 	default:
