@@ -19,7 +19,7 @@ edges::~edges(void)
 void edges::emplace(unsigned source, unsigned target, const std::string & name)
 {
 
-	auto pre_existing_edge(
+	auto the_edge(
 		std::find_if(
 			the_edges.begin(), the_edges.end(),
 			[&](const edge& existing) -> bool
@@ -28,36 +28,37 @@ void edges::emplace(unsigned source, unsigned target, const std::string & name)
 			}
 		)	
 	);
-	if (the_edges.end() == pre_existing_edge)
+
+	if (the_edges.end() == the_edge)
 	{
 		the_edges.emplace_back(source, target, name);
+		// the_edge = the_edges.end()--;
 	}
 	else
 	{
-		pre_existing_edge->add(name);
+		the_edge->add(name);
 	}
 
 }
 
-std::pair<unsigned, unsigned> edges::get_text_dimensions(void)
+void edges::update_spacing(states& the_states)
 {
 
-	auto longest_length(std::make_pair(0u, 0u));
+	unsigned longest_length = std::numeric_limits<unsigned>::min();
 
 	std::for_each(
 		the_edges.begin(), the_edges.end(),
 		[&](edge& e)
 		{
-			auto current_length(e.get_text_dimensions());
-			current_length.first += 50;
-			if (longest_length.first < current_length.first)
+			auto current_length(e.get_spacing(the_states));
+			if (longest_length < current_length)
 			{
 				longest_length = current_length;
 			}
 		}
 	);
 
-	return longest_length;
+	the_states.set_spacing(longest_length, longest_length);
 
 }
 
@@ -86,5 +87,4 @@ void edges::draw(SkCanvas& canvas, const states& the_states)
 			
 		}
 	);
-
 }

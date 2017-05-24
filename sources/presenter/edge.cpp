@@ -44,14 +44,27 @@ void edge::add(const std::string & another_name)
 	name += ", " + another_name;
 }
 
-std::pair<unsigned, unsigned> edge::get_text_dimensions(void)
+unsigned edge::get_spacing(const states& the_states) const
 {
+
 	SkRect bounds;
 	paint_text.measureText(name.c_str(), name.length(), &bounds);
-	return std::make_pair(
-		static_cast<unsigned>(bounds.width()),
-		static_cast<unsigned>(bounds.height())
+	float hypotenuse = bounds.width() + 50;
+
+	auto source_point(the_states.get_endpoint(source, target, states::states_duplex::unidirectional_source));
+	auto target_point(the_states.get_endpoint(source, target, states::states_duplex::unidirectional_target));
+	float angle_in_radians(
+		atan2f(
+			static_cast<float>(target_point.y - source_point.y),
+			static_cast<float>(target_point.x - source_point.x)
+		)
 	);
+
+	float opposite = std::abs(std::cosf(angle_in_radians)*hypotenuse);
+	float adjacent = std::abs(std::sinf(angle_in_radians)*hypotenuse);
+
+	return static_cast<unsigned>(std::fmaxf(opposite, adjacent));
+
 }
 
 void edge::draw(SkCanvas& canvas, const states& the_states, bool single)

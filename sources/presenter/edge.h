@@ -17,7 +17,7 @@ public:
 
 	void add(const std::string& another_name);
 
-	std::pair<unsigned, unsigned> get_text_dimensions(void);
+	unsigned edge::get_spacing(const states& the_states) const;
 
 	void draw(SkCanvas& canvas, const states& the_states, bool single);
 

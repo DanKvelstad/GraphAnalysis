@@ -7,10 +7,10 @@ states::states(void)
 : frame_thickness(50)
 , rightmost_state(static_cast<unsigned>(-1))
 , lowest_state(static_cast<unsigned>(-1))
-, state_width(0)
+, state_width(1)
 , state_height(50)
-, spacing_width(0)
-, spacing_height(0)
+, spacing_width(1)
+, spacing_height(1)
 {
 }
 

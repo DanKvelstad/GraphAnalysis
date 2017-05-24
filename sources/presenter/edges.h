@@ -19,7 +19,7 @@ public:
 
 	DLLEXPORT void emplace(unsigned source, unsigned target, const std::string& name="");
 	
-	std::pair<unsigned, unsigned> get_text_dimensions(void);
+	void update_spacing(states& the_states);
 	
 	void draw(SkCanvas& canvas, const states& the_states);
 

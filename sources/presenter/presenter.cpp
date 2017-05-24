@@ -32,8 +32,7 @@ void draw(
 )
 {
 
-	auto spacing(the_edges.get_text_dimensions().first);
-	the_states.set_spacing(spacing, spacing);
+	the_edges.update_spacing(the_states);
 
 	auto surface(
 		SkSurface::MakeRasterN32Premul(
