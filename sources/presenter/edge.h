@@ -17,7 +17,7 @@ public:
 
 	void add(const std::string& another_name);
 
-	unsigned edge::get_spacing(const states& the_states) const;
+	unsigned get_spacing(const states& the_states) const;
 
 	void draw(SkCanvas& canvas, const states& the_states, bool single);
 

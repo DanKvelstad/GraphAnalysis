@@ -73,6 +73,30 @@ unsigned states::get_workspace_height(void)
 	return region_of_state(my_states.at(lowest_state)).getBounds().bottom() + frame_thickness;
 }
 
+unsigned states::get_cell_distance(unsigned a, unsigned b) const
+{
+
+	auto state_a = my_states.at(a);
+	auto state_b = my_states.at(b);
+
+	unsigned d_x = static_cast<unsigned>(
+		std::abs(
+			static_cast<int>(state_a.get_x()) - 
+			static_cast<int>(state_b.get_x())
+		)
+	);
+
+	unsigned d_y = static_cast<unsigned>(
+		std::abs(
+			static_cast<int>(state_a.get_y()) -
+			static_cast<int>(state_b.get_y())
+		)
+	);
+	
+	return std::max(d_x, d_y);
+
+}
+
 void states::set_spacing(unsigned new_spacing_width, unsigned new_spacing_height)
 {
 	spacing_width  = new_spacing_width;

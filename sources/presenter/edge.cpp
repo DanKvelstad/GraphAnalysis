@@ -65,7 +65,7 @@ unsigned edge::get_spacing(const states& the_states) const
 	float opposite = std::abs(std::cosf(angle_in_radians)*hypotenuse);
 	float adjacent = std::abs(std::sinf(angle_in_radians)*hypotenuse);
 
-	return static_cast<unsigned>(std::fmaxf(opposite, adjacent));
+	return static_cast<unsigned>(std::fmaxf(opposite, adjacent))/the_states.get_cell_distance(source, target);
 
 }
 

@@ -24,6 +24,7 @@ public:
 	unsigned get_workspace_width(void);
 	unsigned get_workspace_height(void);
 
+	unsigned get_cell_distance(unsigned a, unsigned b) const;
 	void set_spacing(unsigned new_spacing_width, unsigned new_spacing_height);
 
 	SkRegion region_of_state(const state& s) const;
