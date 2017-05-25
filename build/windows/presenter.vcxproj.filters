@@ -5,16 +5,16 @@
     <ClCompile Include="..\..\sources\presenter\intersects.cpp">
       <Filter>algorithms</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sources\presenter\states.cpp">
-      <Filter>dllexports</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\sources\presenter\state.cpp">
       <Filter>model</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sources\presenter\edges.cpp">
-      <Filter>dllexports</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\sources\presenter\edge.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\presenter\states.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sources\presenter\edges.cpp">
       <Filter>model</Filter>
     </ClCompile>
   </ItemGroup>
@@ -24,22 +24,22 @@
     <ClInclude Include="..\..\sources\presenter\algorithms.h">
       <Filter>algorithms</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sources\presenter\states.h">
-      <Filter>dllexports</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\sources\presenter\dllexport.h">
       <Filter>dllexports</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sources\presenter\state.h">
       <Filter>model</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sources\presenter\edges.h">
-      <Filter>dllexports</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\sources\presenter\edge.h">
       <Filter>model</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sources\presenter\shape.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\states.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\edges.h">
       <Filter>model</Filter>
     </ClInclude>
   </ItemGroup>

@@ -220,31 +220,68 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 			std::min(source_point.y, target_point.y) + std::abs(source_point.y - target_point.y) / 2
 		};
 
-		if ((pi/2.0f-EPSILON) < line_angle && (3.0f*pi/2-EPSILON) > line_angle)
+		if (single)
 		{
 
-			// flip the line angle so that the text is written on the other side
-			line_angle += pi;
-			
-			auto text_angle(line_angle + pi/2);
-			float text_hypotenuse = static_cast<float>(paint_text.getTextSize());
-			float text_opposite = std::cosf(text_angle)*text_hypotenuse;
-			float text_adjacent = std::sinf(text_angle)*text_hypotenuse;
+			if ((pi / 2.0f - EPSILON) < line_angle && (3.0f*pi / 2 - EPSILON) > line_angle)
+			{
 
-			text_center.x = static_cast<scalar>(text_center.x + text_opposite);
-			text_center.y = static_cast<scalar>(text_center.y + text_adjacent);
+				// flip the line angle so that the text is written on the other side
+				line_angle += pi;
+
+				auto text_angle(line_angle + 3*pi/2);
+				float text_hypotenuse = 5.0f;
+				float text_opposite = std::cosf(text_angle)*text_hypotenuse;
+				float text_adjacent = std::sinf(text_angle)*text_hypotenuse;
+
+				text_center.x = static_cast<scalar>(text_center.x + text_opposite);
+				text_center.y = static_cast<scalar>(text_center.y + text_adjacent);
+
+			}
+			else
+			{
+
+				auto text_angle(line_angle - pi / 2);
+				float text_hypotenuse = 5;
+				float text_opposite = std::cosf(text_angle)*text_hypotenuse;
+				float text_adjacent = std::sinf(text_angle)*text_hypotenuse;
+
+				text_center.x = static_cast<scalar>(text_center.x + text_opposite);
+				text_center.y = static_cast<scalar>(text_center.y + text_adjacent);
+
+			}
 
 		}
 		else
 		{
 
-			auto text_angle(line_angle - pi/2);
-			float text_hypotenuse = 5;
-			float text_opposite = std::cosf(text_angle)*text_hypotenuse;
-			float text_adjacent = std::sinf(text_angle)*text_hypotenuse;
+			if ((pi / 2.0f - EPSILON) < line_angle && (3.0f*pi / 2 - EPSILON) > line_angle)
+			{
 
-			text_center.x = static_cast<scalar>(text_center.x + text_opposite);
-			text_center.y = static_cast<scalar>(text_center.y + text_adjacent);
+				// flip the line angle so that the text is written on the other side
+				line_angle += pi;
+
+				auto text_angle(line_angle + pi / 2);
+				float text_hypotenuse = static_cast<float>(paint_text.getTextSize());
+				float text_opposite = std::cosf(text_angle)*text_hypotenuse;
+				float text_adjacent = std::sinf(text_angle)*text_hypotenuse;
+
+				text_center.x = static_cast<scalar>(text_center.x + text_opposite);
+				text_center.y = static_cast<scalar>(text_center.y + text_adjacent);
+
+			}
+			else
+			{
+
+				auto text_angle(line_angle - pi / 2);
+				float text_hypotenuse = 5;
+				float text_opposite = std::cosf(text_angle)*text_hypotenuse;
+				float text_adjacent = std::sinf(text_angle)*text_hypotenuse;
+
+				text_center.x = static_cast<scalar>(text_center.x + text_opposite);
+				text_center.y = static_cast<scalar>(text_center.y + text_adjacent);
+
+			}
 
 		}
 
