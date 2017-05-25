@@ -62,34 +62,38 @@ point get_single_endpoints(const SkRegion& region, shape::endpoint_select select
 
 	auto margin(region.getBounds());
 
-	// 3X   X4X   X10
-	// X           X
-	//		    
-	// X           X
-	// 2           6
-	// X           X
-	//		    
-	// X           X
-	// 1X   X8X   X7
+	const float pi(3.141592653589793238462643383279502884f);
 
 	switch (select)
 	{
 	case shape::endpoint_select::left:
 		return point{ margin.left(), margin.centerY() };
 	case shape::endpoint_select::top_left:
-		return point{ margin.left(), margin.top() };
+		return point{ 
+			static_cast<scalar>((margin.left()+(10+5)) + (10+5)*std::cos(pi+pi/4)), 
+			static_cast<scalar>((margin.top() +(10+5)) + (10+5)*std::sin(pi+pi/4))
+		};
 	case shape::endpoint_select::top:
 		return point{ margin.centerX(), margin.top() };
 	case shape::endpoint_select::top_right:
-		return point{ margin.right(), margin.top() };
+		return point{ 
+			static_cast<scalar>((margin.right()-(10+5)) + (10+5)*std::cos(pi+3*pi/4)), 
+			static_cast<scalar>((margin.top()  +(10+5)) + (10+5)*std::sin(pi+3*pi/4))
+		};
 	case shape::endpoint_select::right:
 		return point{ margin.right(), margin.centerY() };
 	case shape::endpoint_select::bottom_right:
-		return point{ margin.right(), margin.bottom() };
+		return point{ 
+			static_cast<scalar>((margin.right() -(10+5)) + (10+5)*std::cos(pi/4)), 
+			static_cast<scalar>((margin.bottom()-(10+5)) + (10+5)*std::sin(pi/4))
+		};
 	case shape::endpoint_select::bottom:
 		return point{ margin.centerX(), margin.bottom() };
 	case shape::endpoint_select::bottom_left:
-		return point{ margin.left(), margin.bottom() };
+		return point{ 
+			static_cast<scalar>((margin.left()  +(10+5)) + (10+5)*std::cos(3*pi/4)), 
+			static_cast<scalar>((margin.bottom()-(10+5)) + (10+5)*std::sin(3*pi/4))
+		};
 	default:
 		throw std::exception();
 	}
@@ -100,16 +104,6 @@ point get_double_endpoints_source(const SkRegion& region, shape::endpoint_select
 {
 
 	auto margin(region.getBounds());
-
-	// XX   XX4   10X
-	// 3           X
-	//		    
-	// X           6
-	// X           X
-	// 2           X
-	//		    
-	// X           7
-	// X1   8XX   XX
 
 	switch (select)
 	{
@@ -139,16 +133,6 @@ point get_double_endpoints_target(const SkRegion& region, shape::endpoint_select
 {
 
 	auto margin(region.getBounds());
-
-	// X3   4XX   XX
-	// X           10
-	//
-	// 2           X
-	// X           X
-	// X           6
-	//
-	// 1           X
-	// Xx   XX8   7X
 	
 	switch (select)
 	{
