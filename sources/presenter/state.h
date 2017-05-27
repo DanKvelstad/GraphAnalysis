@@ -3,8 +3,11 @@
 #include <string>
 #include <vector>
 #include "common.h"
+
 #include "SkPaint.h"
+#include "SkRegion.h"
 #include "shape.h"
+#include <map>
 
 class SkCanvas;
 class SkRegion;
@@ -35,5 +38,8 @@ private:
 
 	SkPaint paint_shape;
 	SkPaint paint_text;
+
+	SkRegion assigned_region;
+	std::map<shape::endpoint_select, point> map_single_endpoint;
 
 };

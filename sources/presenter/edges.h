@@ -1,6 +1,5 @@
 #pragma once
 
-#include "dllexport.h"
 #include <vector>
 
 class SkCanvas;
@@ -13,11 +12,11 @@ class edges
 
 public:
 
-	DLLEXPORT edges(void);
-	DLLEXPORT edges(const edges& other);
-	DLLEXPORT ~edges(void);
+	edges(void);
+	edges(const edges& other);
+	~edges(void);
 
-	DLLEXPORT void emplace(unsigned source, unsigned target, const std::string& name="");
+	void emplace(unsigned source, unsigned target, const std::string& name="");
 	
 	void update_spacing(states& the_states);
 	

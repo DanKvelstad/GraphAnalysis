@@ -1,14 +1,39 @@
 #pragma once
 
 #include "dllexport.h"
-#include "states.h"
-#include "edges.h"
 #include <experimental/filesystem>
+#include <memory>
 
 using namespace std::experimental::filesystem::v1;
 
-DLLEXPORT void draw(
-	const path&		output,
-	states			the_states, 
-	edges			the_edges
-);
+class states;
+class edges;
+
+class presenter 
+{
+
+public:
+
+	DLLEXPORT presenter(void);
+	DLLEXPORT ~presenter(void);
+
+	DLLEXPORT void emplace_state(
+		const std::string&	name,
+		unsigned			x,
+		unsigned			y
+	);
+
+	DLLEXPORT void emplace_edge(
+		unsigned			source, 
+		unsigned			target, 
+		const std::string&	name = ""
+	);
+
+	DLLEXPORT void draw(const path& output);
+
+private:
+
+	std::unique_ptr<states> the_states;
+	std::unique_ptr<edges>  the_edges;
+
+};

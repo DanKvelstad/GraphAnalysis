@@ -1,6 +1,5 @@
 #pragma once
 
-#include "dllexport.h"
 #include "common.h"
 #include <string>
 #include <vector>
@@ -15,11 +14,11 @@ class states
 
 public:
 
-	DLLEXPORT states(void);
-	DLLEXPORT states(const states& other);
-	DLLEXPORT ~states(void);
+	states(void);
+	states(const states& other);
+	~states(void);
 	
-	DLLEXPORT void emplace(const std::string& name, unsigned x, unsigned y);
+	void emplace(const std::string& name, unsigned x, unsigned y);
 
 	unsigned get_workspace_width(void);
 	unsigned get_workspace_height(void);

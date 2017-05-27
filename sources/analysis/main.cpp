@@ -1,7 +1,5 @@
 #include "compiler/compiler.h"
 #include "presenter/presenter.h"
-#include "presenter/states.h"
-#include "presenter/edges.h"
 #include <experimental/filesystem>
 #include <iostream>
 #include <fstream>
@@ -69,27 +67,27 @@ int main(int argc, char* argv[])
 					<< layouting_duration.count() << "ms" << std::endl;
 		std::cout	<< "       " << layout.get_intersection_count() << " intersections" << std::endl;
 
-		states l_states;
+		presenter the_presenter;
+		
 		for (auto it(layout.get_knots()); nullptr != it; it = it->next())
 		{
-			l_states.emplace(
+			the_presenter.emplace_state(
 				parsed.get_state(it->get_index()).get(), 
 				it->get().x, 
 				it->get().y
 			);
 		}
 
-		edges l_edges;
 		for (auto it(layout.get_strands()); nullptr!=it; it = it->next())
 		{
-			l_edges.emplace(
+			the_presenter.emplace_edge(
 				it->get_source(),
 				it->get_target(),
 				"..."
 			);
 		}
 
-		draw(path(canonical(argv[0]).parent_path())/"analysis.png", l_states, l_edges);
+		the_presenter.draw(path(canonical(argv[0]).parent_path())/"analysis.png");
 
 	}
 
