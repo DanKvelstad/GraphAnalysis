@@ -20,7 +20,17 @@ public:
 
 	DLLEXPORT unsigned get_intersection_count(void);
 
-	struct coordinate { unsigned x; unsigned y; };
+	struct coordinate { 
+		
+		unsigned x; 
+		unsigned y; 
+
+		bool operator==(const coordinate& other) const
+		{
+			return x == other.x && y == other.y;
+		}
+
+	};
 	DLLEXPORT coordinate at(unsigned i, unsigned j);
 
 private:

@@ -1,16 +1,25 @@
 #pragma once
 
 #include "dllexport.h"
+#include <algorithm>
 
 typedef float pixel_scalar;
 struct DLLEXPORT pixel_point
 {
+
 	pixel_scalar x;
 	pixel_scalar y;
 
 	bool operator==(const pixel_point& other) const
 	{
-		return x == other.x && y == other.y;
+		auto comp(
+			[](float a, float b) -> bool
+			{
+				const float epsilon(0.001f);
+				return fabs(a - b) < epsilon;
+			}
+		);
+		return comp(x, other.x) && comp(y, other.y);
 	}
 
 };
@@ -30,15 +39,4 @@ struct DLLEXPORT grid_point
 		};
 	}
 
-};
-
-struct edge {
-	unsigned from_index; 
-	unsigned to_index; 
-};
-
-struct coordinate 
-{ 
-	unsigned x; 
-	unsigned y; 
 };

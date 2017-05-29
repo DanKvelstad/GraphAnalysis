@@ -10,13 +10,21 @@ bool intersection(
 
 	const auto denominator = (ts.x-tt.x)*(os.y-ot.y)-(ts.y-tt.y)*(os.x-ot.x);
 	
-	if(0==denominator)
+	if(-0.001<denominator&&0.001>denominator)
 	{	// "When the two lines are parallel or coincident the denominator is zero"
 		
-		if( ((ts.x==os.x && ts.y==os.y) && (tt.x==ot.x && tt.y==ot.y)) ||
-			((ts.x==ot.x && ts.y==ot.y) && (tt.x==os.x && tt.y==os.y)) )
-		{	// They are the same segment, possibly in different directions
-			return false;
+		// |  |   |
+		// |  |   ||
+		// |  ||  ||
+		// |   |  |
+
+		if( ts==os && tt==ot )
+		{	// They are the same segment in the same different directions
+			return true;
+		}
+		else if (ts == ot && tt == os)
+		{	// They are the same segment in different directions
+			return true;
 		}
 		else if(contains(ts, tt, os))
 		{	
@@ -69,13 +77,13 @@ bool contains(pixel_point s, pixel_point t, pixel_point p)
 
 	float cross_product((p.y - s.y)*(t.x - s.x) - (p.x - s.x)*(t.y - s.y));
 
-	if (s.x == p.x && s.y == p.y)
+	if (s == p)
 	{	// if p is source
-		return true;
+		return false;
 	}
-	else if (t.x == p.x && t.y == p.y)
+	else if (t == p)
 	{	// if p is target
-		return true;
+		return false;
 	}
 	else if (!(0.1>cross_product&&-0.1<cross_product))
 	{	// if p is not on the line

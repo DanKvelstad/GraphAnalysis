@@ -97,6 +97,52 @@ DLLEXPORT std::pair<unsigned, unsigned> layouter::layout()
 		}
 
 	} while (std::next_permutation(grid.begin(), grid.end()));
+
+	std::sort(
+		candidates.begin(), candidates.end(),
+		[this](const std::vector<pixel_point>&a, const std::vector<pixel_point>&b) -> bool
+		{
+
+			auto a_length = std::accumulate(
+				edges.begin(), edges.end(), 0.0f,
+				[&a](const float& sum, const edge& e) -> float
+				{
+					auto p1 = a.at(e.to_index);
+					auto p2 = a.at(e.from_index);
+					auto dx = p1.x - p2.x;
+					auto dy = p1.y - p2.y;
+					return sum + sqrt(dx*dx+dy*dy);
+				}
+			);
+
+			float b_length = std::accumulate(
+				edges.begin(), edges.end(), 0.0f,
+				[&b](const float& sum, const edge& e) -> float
+				{
+					auto p1 = b.at(e.to_index);
+					auto p2 = b.at(e.from_index);
+					auto dx = p1.x - p2.x;
+					auto dy = p1.y - p2.y;
+					return sum + sqrt(dx*dx+dy*dy);
+				}
+			);
+
+			if (fabs(a_length - b_length) < 0.0001)
+			{
+				auto it = std::mismatch(
+					a.begin(), a.end(),
+					b.begin(), b.end()
+				);
+				return	sqrt( it.first->x*it.first->x  +  it.first->y*it.first->y ) < 
+						sqrt(it.second->x*it.second->x + it.second->y*it.second->y);
+			}
+			else
+			{
+				return a_length < b_length;
+			}
+
+		}
+	);
 	
 	return std::make_pair(
 		static_cast<unsigned>(candidates.size()),
