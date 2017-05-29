@@ -124,25 +124,3 @@ TEST(test_presenter, long_names)
 	the_presenter.draw(output(test_info_->name()));
 
 }
-
-TEST(test_presenter, circle)
-{
-
-	presenter the_presenter;
-
-	the_presenter.emplace_state("s0", 1, 1);
-	the_presenter.emplace_state("s1", 1, 0);
-	the_presenter.emplace_state("s2", 0, 1);
-
-	the_presenter.emplace_edge(0, 0, "e0");
-	the_presenter.emplace_edge(1, 0, "e1");
-	the_presenter.emplace_edge(2, 0, "e2");
-	the_presenter.emplace_edge(1, 2, "e3");
-
-	//draw(
-	//	output(test_info_->name()),
-	//	states,
-	//	edges
-	//);
-
-}

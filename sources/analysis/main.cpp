@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <layouter\layouters.h>
+#include <layouter\layouter.h>
 #include <map>
 #include <vector>
 #include <utility>
@@ -47,47 +47,45 @@ int main(int argc, char* argv[])
 	
 	{	// parse should return many parsed statemachines, iterate over them
 
-		std::vector<std::pair<unsigned, unsigned>> transition_edges;
-		// transition_edges.reserve(parsed.transition_count());
-		for (auto it(&parsed.get_transitions()); nullptr!=it; it = it->next())
-		{
-			transition_edges.emplace_back(it->get_source(), it->get_target());
-		}
-
-		std::cout << "Now layouting the statemachine...";
-		auto layouting_start(std::chrono::steady_clock::now());
-		auto layout(layouter_brute(transition_edges));
-		auto layouting_duration(
-			std::chrono::duration_cast<std::chrono::milliseconds>(
-				std::chrono::steady_clock::now()-layouting_start
-			)
-		);
-		std::cout << "done" << std::endl;
-		std::cout	<< "Layouting finished in "
-					<< layouting_duration.count() << "ms" << std::endl;
-		std::cout	<< "       " << layout.get_intersection_count() << " intersections" << std::endl;
-
-		presenter the_presenter;
-		
-		for (auto it(layout.get_knots()); nullptr != it; it = it->next())
-		{
-			the_presenter.emplace_state(
-				parsed.get_state(it->get_index()).get(), 
-				it->get().x, 
-				it->get().y
-			);
-		}
-
-		for (auto it(layout.get_strands()); nullptr!=it; it = it->next())
-		{
-			the_presenter.emplace_edge(
-				it->get_source(),
-				it->get_target(),
-				"..."
-			);
-		}
-
-		the_presenter.draw(path(canonical(argv[0]).parent_path())/"analysis.png");
+//		layouter layout;
+//		for (auto it(&parsed.get_transitions()); nullptr!=it; it = it->next())
+//		{
+//			layout.emplace(it->get_source(), it->get_target());
+//		}
+//
+//		std::cout << "Now layouting the statemachine...";
+//		auto layouting_start(std::chrono::steady_clock::now());
+//		auto the_layout(layout.layout());
+//		auto layouting_duration(
+//			std::chrono::duration_cast<std::chrono::milliseconds>(
+//				std::chrono::steady_clock::now()-layouting_start
+//			)
+//		);
+//		std::cout << "done" << std::endl;
+//		std::cout	<< "Layouting finished in "
+//					<< layouting_duration.count() << "ms" << std::endl;
+//		
+//		presenter the_presenter;
+//		
+//		for (unsigned i(0); i<the_layout.size(); i++)
+//		{
+//			the_presenter.emplace_state(
+//				parsed.get_state(i).get(), 
+//				the_layout.at(i).first, 
+//				the_layout.at(i).second
+//			);
+//		}
+//
+//		for (auto it(&parsed.get_transitions()); nullptr != it; it = it->next())
+//		{
+//			the_presenter.emplace_edge(
+//				it->get_source(),
+//				it->get_target(),
+//				"..."
+//			);
+//		}
+//
+//		the_presenter.draw(path(canonical(argv[0]).parent_path())/"analysis.png");
 
 	}
 

@@ -1,15 +1,10 @@
 #include "toolbox.h"
 
 bool intersection(
-	grid_point this_source, grid_point this_target,
-	grid_point other_source, grid_point other_target
+	const pixel_point& ts, const pixel_point& tt,
+	const pixel_point& os, const pixel_point& ot
 )
 {
-
-	auto ts(static_cast<pixel_point>(this_source));
-	auto tt(static_cast<pixel_point>(this_target));
-	auto os(static_cast<pixel_point>(other_source));
-	auto ot(static_cast<pixel_point>(other_target));
 
 	// https://en.wikipedia.org/wiki/line%E2%80%93line_intersection
 
@@ -50,13 +45,21 @@ bool intersection(
 		//   rather than the line segments between the points, 
 		//   and can produce an intersection point beyond the lengths of the line segments. "
 
-		pixel_point point{
-			static_cast<float>((ts.x*tt.y - ts.y*tt.x)*(os.x-ot.x) - (ts.x-tt.x)*(os.x*ot.y - os.y*ot.x)) / denominator,
-			static_cast<float>((ts.x*tt.y - ts.y*tt.x)*(os.y-ot.y) - (ts.y-tt.y)*(os.x*ot.y - os.y*ot.x)) / denominator
-		};
+		if (ts == os || ts == ot || tt == os || tt == ot)
+		{
+			return false;
+		}
+		else
+		{
 
-		return contains(ts, tt, point) && contains(os, ot, point) ;
+			pixel_point point{
+				static_cast<float>((ts.x*tt.y - ts.y*tt.x)*(os.x - ot.x) - (ts.x - tt.x)*(os.x*ot.y - os.y*ot.x)) / denominator,
+				static_cast<float>((ts.x*tt.y - ts.y*tt.x)*(os.y - ot.y) - (ts.y - tt.y)*(os.x*ot.y - os.y*ot.x)) / denominator
+			};
 
+			return contains(ts, tt, point) && contains(os, ot, point);
+
+		}
 	}
 
 }

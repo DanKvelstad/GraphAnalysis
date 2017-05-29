@@ -7,6 +7,12 @@ struct DLLEXPORT pixel_point
 {
 	pixel_scalar x;
 	pixel_scalar y;
+
+	bool operator==(const pixel_point& other) const
+	{
+		return x == other.x && y == other.y;
+	}
+
 };
 
 typedef unsigned grid_scalar;
@@ -24,4 +30,15 @@ struct DLLEXPORT grid_point
 		};
 	}
 
+};
+
+struct edge {
+	unsigned from_index; 
+	unsigned to_index; 
+};
+
+struct coordinate 
+{ 
+	unsigned x; 
+	unsigned y; 
 };

@@ -1,45 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="support">
-      <UniqueIdentifier>{b0d356b4-0194-40b7-a2f1-7a592014a924}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="model">
-      <UniqueIdentifier>{58085e67-7993-436a-be2c-56a96609ee40}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\sources\layouter\common.h">
-      <Filter>support</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sources\layouter\layouters.h" />
     <ClInclude Include="..\..\sources\layouter\dllexport.h" />
-    <ClInclude Include="..\..\sources\layouter\toolbox.h">
-      <Filter>support</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sources\layouter\linked_knot.h">
-      <Filter>model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sources\layouter\linked_strand.h">
-      <Filter>model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sources\layouter\web.h">
-      <Filter>model</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\sources\layouter\layouter.h" />
+    <ClInclude Include="..\..\sources\layouter\common.h" />
+    <ClInclude Include="..\..\sources\layouter\toolbox.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\sources\layouter\layouter_brute.cpp" />
-    <ClCompile Include="..\..\sources\layouter\toolbox.cpp">
-      <Filter>support</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sources\layouter\linked_knot.cpp">
-      <Filter>model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sources\layouter\linked_strand.cpp">
-      <Filter>model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sources\layouter\web.cpp">
-      <Filter>model</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\sources\layouter\layouter.cpp" />
+    <ClCompile Include="..\..\sources\layouter\toolbox.cpp" />
   </ItemGroup>
 </Project>
