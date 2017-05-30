@@ -15,19 +15,41 @@ layouter::~layouter(void)
 
 DLLEXPORT void layouter::emplace(unsigned from_index, unsigned to_index)
 {
-	edges.emplace_back(edge{ from_index, to_index });
-	largest_index = std::max(largest_index, std::max(from_index, to_index));
+
+	bool accepted = edges.end()==std::find_if(
+		edges.begin(), edges.end(),
+		[&](const edge& existing) -> bool
+		{
+			return	( existing.from_index == from_index &&
+					  existing.to_index   == to_index   )  ||
+					( existing.from_index == to_index	&&
+					  existing.to_index   == from_index );
+		}
+	);
+	if (accepted)
+	{
+		edges.emplace_back(edge{ from_index, to_index });
+		largest_index = std::max(largest_index, std::max(from_index, to_index));
+	}
+	
 }
 
 DLLEXPORT std::pair<unsigned, unsigned> layouter::layout()
 {
 
-	grid_point grid_dimensions{
-		static_cast<unsigned>(std::ceil((largest_index+1) / 2.0)),
-		static_cast<unsigned>(std::ceil((largest_index+1) / 2.0))
-	};
+	unsigned state_count(largest_index+1);
 
-	std::vector<unsigned> grid(grid_dimensions.x*grid_dimensions.y);
+	unsigned grid_dimensions(
+		static_cast<unsigned>(
+			std::ceilf(
+				std::sqrtf(
+					static_cast<float>(state_count)
+				)	
+			)
+		)
+	);
+
+	std::vector<unsigned> grid(grid_dimensions*grid_dimensions);
 	for (unsigned j = 0; j<grid.size(); j++)
 	{
 		grid.at(j) = j;
@@ -39,13 +61,13 @@ DLLEXPORT std::pair<unsigned, unsigned> layouter::layout()
 	{
 
 		std::vector<pixel_point> candidate;
-		candidate.reserve(largest_index+1);
-		for (unsigned i(0); i < largest_index+1; i++)
+		candidate.reserve(state_count);
+		for (unsigned i(0); i < state_count; i++)
 		{
 			candidate.emplace_back(
 				pixel_point{
-					static_cast<pixel_scalar>(grid.at(i) % grid_dimensions.x),
-					static_cast<pixel_scalar>(grid.at(i) / grid_dimensions.x)
+					static_cast<pixel_scalar>(grid.at(i) % grid_dimensions),
+					static_cast<pixel_scalar>(grid.at(i) / grid_dimensions)
 				}
 			);
 		}
