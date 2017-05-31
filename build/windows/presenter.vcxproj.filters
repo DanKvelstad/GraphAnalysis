@@ -14,6 +14,7 @@
     <ClCompile Include="..\..\sources\presenter\edges.cpp">
       <Filter>model</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\sources\presenter\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\sources\presenter\presenter.h" />
@@ -34,6 +35,7 @@
       <Filter>model</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sources\presenter\dllexport.h" />
+    <ClInclude Include="..\..\sources\presenter\window.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="model">

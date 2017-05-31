@@ -27,6 +27,7 @@
     <ClInclude Include="..\..\sources\presenter\shape.h" />
     <ClInclude Include="..\..\sources\presenter\state.h" />
     <ClInclude Include="..\..\sources\presenter\states.h" />
+    <ClInclude Include="..\..\sources\presenter\window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\sources\presenter\edge.cpp" />
@@ -34,6 +35,7 @@
     <ClCompile Include="..\..\sources\presenter\presenter.cpp" />
     <ClCompile Include="..\..\sources\presenter\state.cpp" />
     <ClCompile Include="..\..\sources\presenter\states.cpp" />
+    <ClCompile Include="..\..\sources\presenter\window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4676F09B-D796-4DD9-B382-B9E1AE03F16D}</ProjectGuid>

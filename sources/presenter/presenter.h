@@ -29,6 +29,7 @@ public:
 		const std::string&	name = ""
 	);
 
+	DLLEXPORT void create_window(const path& output);
 	DLLEXPORT void create_png(const path& output);
 
 private:
