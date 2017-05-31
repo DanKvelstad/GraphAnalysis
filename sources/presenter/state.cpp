@@ -1,5 +1,4 @@
 #include "state.h"
-#include "algorithms.h"
 #include "SkCanvas.h"
 #include "SkTextBox.h"
 #include "SkRegion.h"

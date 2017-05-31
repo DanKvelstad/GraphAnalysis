@@ -40,7 +40,7 @@ TEST(test_layouter, duplex)
 				the_presenter.emplace_edge(in.first, in.second);
 			}
 
-			the_presenter.draw(path / (std::to_string(i) + ".png"));
+			the_presenter.create_png(path / (std::to_string(i) + ".png"));
 
 		}
 	}
@@ -110,7 +110,7 @@ TEST(test_layouter, three_by_three)
 				the_presenter.emplace_edge(in.first, in.second);
 			}
 
-			the_presenter.draw(path/(std::to_string(i)+".png"));
+			the_presenter.create_png(path/(std::to_string(i)+".png"));
 
 		}
 	}

@@ -37,7 +37,7 @@ TEST(test_presenter, full_duplex)
 	the_presenter.emplace_edge(4, 1, "forward");
 	the_presenter.emplace_edge(1, 4, "backward");
 
-	the_presenter.draw(output(test_info_->name()));
+	the_presenter.create_png(output(test_info_->name()));
 
 }
 
@@ -64,7 +64,7 @@ TEST(test_presenter, single_duplex_forward)
 	the_presenter.emplace_edge(3, 4, "forward");
 	the_presenter.emplace_edge(4, 1, "forward");
 
-	the_presenter.draw(output(test_info_->name()));
+	the_presenter.create_png(output(test_info_->name()));
 
 }
 
@@ -91,7 +91,7 @@ TEST(test_presenter, single_duplex_backward)
 	the_presenter.emplace_edge(4, 3, "backward");
 	the_presenter.emplace_edge(1, 4, "backward");
 
-	the_presenter.draw(output(test_info_->name()));
+	the_presenter.create_png(output(test_info_->name()));
 
 }
 
@@ -107,7 +107,7 @@ TEST(test_presenter, multiple_events_edge)
 	the_presenter.emplace_edge(0, 1, "e1");
 	the_presenter.emplace_edge(0, 1, "e2");
 
-	the_presenter.draw(output(test_info_->name()));
+	the_presenter.create_png(output(test_info_->name()));
 
 }
 
@@ -121,6 +121,6 @@ TEST(test_presenter, long_names)
 
 	the_presenter.emplace_edge(0, 1, "long_event_name");
 
-	the_presenter.draw(output(test_info_->name()));
+	the_presenter.create_png(output(test_info_->name()));
 
 }

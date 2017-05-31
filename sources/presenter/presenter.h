@@ -29,7 +29,7 @@ public:
 		const std::string&	name = ""
 	);
 
-	DLLEXPORT void draw(const path& output);
+	DLLEXPORT void create_png(const path& output);
 
 private:
 

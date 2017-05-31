@@ -48,7 +48,7 @@ void presenter::emplace_edge(unsigned source, unsigned target, const std::string
 	the_edges->emplace(source, target, name);
 }
 
-void presenter::draw(const path & output)
+void presenter::create_png(const path & create_png)
 {
 
 	the_edges->update_spacing(*the_states);
@@ -76,8 +76,8 @@ void presenter::draw(const path & output)
 		throw std::exception();
 	}
 
-	create_directories(output.parent_path());
-	auto output_string(output.string());
+	create_directories(create_png.parent_path());
+	auto output_string(create_png.string());
 	SkFILEWStream out(output_string.c_str());
 	(void)out.write(png->data(), png->size());
 

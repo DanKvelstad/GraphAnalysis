@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\sources\presenter\algorithms.h" />
     <ClInclude Include="..\..\sources\presenter\dllexport.h" />
     <ClInclude Include="..\..\sources\presenter\edge.h" />
     <ClInclude Include="..\..\sources\presenter\edges.h" />

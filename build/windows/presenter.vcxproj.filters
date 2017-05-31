@@ -21,12 +21,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\sources\presenter\presenter.h" />
     <ClInclude Include="..\..\sources\presenter\common.h" />
-    <ClInclude Include="..\..\sources\presenter\algorithms.h">
-      <Filter>algorithms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sources\presenter\dllexport.h">
-      <Filter>dllexports</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\sources\presenter\state.h">
       <Filter>model</Filter>
     </ClInclude>
@@ -42,6 +36,7 @@
     <ClInclude Include="..\..\sources\presenter\edges.h">
       <Filter>model</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\sources\presenter\dllexport.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="model">
@@ -49,9 +44,6 @@
     </Filter>
     <Filter Include="algorithms">
       <UniqueIdentifier>{bb91bff1-ebbd-495d-a405-7ca383f92d50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="dllexports">
-      <UniqueIdentifier>{c0a8598e-afe0-4e5c-89bd-096955900995}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

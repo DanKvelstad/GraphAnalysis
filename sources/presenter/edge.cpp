@@ -1,7 +1,6 @@
 #include "edge.h"
 #include "states.h"
 #include "common.h"
-#include "algorithms.h"
 #include <algorithm>
 #include "SkCanvas.h"
 #include "SkTextBox.h"
