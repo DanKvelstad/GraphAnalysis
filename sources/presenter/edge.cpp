@@ -80,121 +80,83 @@ void edge::draw(SkCanvas& canvas, const states& the_states, bool single)
 	if (source == target)
 	{
 
-		auto region(the_states.region_of_state(source).getBounds());
-		point source_point{ region.left() + 25, region.top() };
-		point target_point{ region.left(), region.top() + 25 };
-
-		canvas.drawArc(
-			SkRect::MakeLTRB(
-				static_cast<SkScalar>(target_point.x-25),
-				static_cast<SkScalar>(source_point.y-25),
-				static_cast<SkScalar>(source_point.x),
-				static_cast<SkScalar>(target_point.y)
-			),
-			90,
-			270,
-			false,
-			paint_line
-		);
-
-		point a1{
-			static_cast<scalar>(target_point.x - cosf(0-offset_to_line_angle)*arrowhead_length),
-			static_cast<scalar>(target_point.y - sinf(0-offset_to_line_angle)*arrowhead_length)
-		};
-		canvas.drawLine(
-			static_cast<SkScalar>(a1.x),
-			static_cast<SkScalar>(a1.y),
-			static_cast<SkScalar>(target_point.x),
-			static_cast<SkScalar>(target_point.y),
-			paint_line
-		);
-
-		point a2{
-			static_cast<scalar>(target_point.x - cosf(0+offset_to_line_angle)*arrowhead_length),
-			static_cast<scalar>(target_point.y - sinf(0+offset_to_line_angle)*arrowhead_length)
-		};
-		canvas.drawLine(
-			static_cast<SkScalar>(a2.x),
-			static_cast<SkScalar>(a2.y),
-			static_cast<SkScalar>(target_point.x),
-			static_cast<SkScalar>(target_point.y),
-			paint_line
-		);
-
-		paint_text.setTextAlign(SkPaint::Align::kCenter_Align);
-		SkTextBox text_box;
-		text_box.setText(name.c_str(), name.length(), paint_text);
-		text_box.setSpacingAlign(SkTextBox::SpacingAlign::kCenter_SpacingAlign);
-		text_box.setBox(
-			static_cast<SkScalar>(target_point.x - 25),
-			static_cast<SkScalar>(source_point.y - 50),
-			static_cast<SkScalar>(source_point.x),
-			static_cast<SkScalar>(source_point.y - 25 - 5)
-		);
-		text_box.draw(&canvas);
+		// do something fancy
 
 	}
 	else
 	{
+
 		point source_point;
 		point target_point;
 
-		if (single)
-		{
-			source_point = the_states.get_endpoint(source, target, states::states_duplex::unidirectional_source);
-			target_point = the_states.get_endpoint(source, target, states::states_duplex::unidirectional_target);
-		}
-		else
-		{
-			source_point = the_states.get_endpoint(source, target, states::states_duplex::bidirectional_source);
-			target_point = the_states.get_endpoint(source, target, states::states_duplex::bidirectional_target);
+		{	// draw the line
+
+			if (single)
+			{
+				source_point = the_states.get_endpoint(source, target, states::states_duplex::unidirectional_source);
+				target_point = the_states.get_endpoint(source, target, states::states_duplex::unidirectional_target);
+			}
+			else
+			{
+				source_point = the_states.get_endpoint(source, target, states::states_duplex::bidirectional_source);
+				target_point = the_states.get_endpoint(source, target, states::states_duplex::bidirectional_target);
+			}
+
+			canvas.drawLine(
+				static_cast<SkScalar>(source_point.x),
+				static_cast<SkScalar>(source_point.y),
+				static_cast<SkScalar>(target_point.x),
+				static_cast<SkScalar>(target_point.y),
+				paint_line
+			);
+
 		}
 
-		canvas.drawLine(
-			static_cast<SkScalar>(source_point.x),
-			static_cast<SkScalar>(source_point.y),
-			static_cast<SkScalar>(target_point.x),
-			static_cast<SkScalar>(target_point.y),
-			paint_line
-		);
+		float line_angle;
+		float line_length;
+		{
 
-		float line_angle(
-			atan2f(
+			line_angle = atan2f(
 				static_cast<float>(target_point.y - source_point.y),
 				static_cast<float>(target_point.x - source_point.x)
-			)
-		);
+			);
 
-		point a1{
-			static_cast<scalar>(target_point.x - cosf(line_angle - offset_to_line_angle)*arrowhead_length),
-			static_cast<scalar>(target_point.y - sinf(line_angle - offset_to_line_angle)*arrowhead_length)
-		};
-		canvas.drawLine(
-			static_cast<SkScalar>(a1.x),
-			static_cast<SkScalar>(a1.y),
-			static_cast<SkScalar>(target_point.x),
-			static_cast<SkScalar>(target_point.y),
-			paint_line
-		);
+			auto diff_x(static_cast<float>(source_point.x - target_point.x));
+			auto diff_y(static_cast<float>(source_point.y - target_point.y));
+			line_length = std::sqrtf(diff_x*diff_x + diff_y*diff_y);
 
-		point a2{
-			static_cast<scalar>(target_point.x - cosf(line_angle + offset_to_line_angle)*arrowhead_length),
-			static_cast<scalar>(target_point.y - sinf(line_angle + offset_to_line_angle)*arrowhead_length)
-		};
-		canvas.drawLine(
-			static_cast<SkScalar>(a2.x),
-			static_cast<SkScalar>(a2.y),
-			static_cast<SkScalar>(target_point.x),
-			static_cast<SkScalar>(target_point.y),
-			paint_line
-		);
+		}
 
-		auto diff_x(source_point.x - target_point.x);
-		auto diff_y(source_point.y - target_point.y);
-		auto line_length(std::sqrt(diff_x*diff_x + diff_y*diff_y));
+		{	// draw the arrow
+
+			point a1{
+				static_cast<scalar>(target_point.x - cosf(line_angle - offset_to_line_angle)*arrowhead_length),
+				static_cast<scalar>(target_point.y - sinf(line_angle - offset_to_line_angle)*arrowhead_length)
+			};
+			canvas.drawLine(
+				static_cast<SkScalar>(a1.x),
+				static_cast<SkScalar>(a1.y),
+				static_cast<SkScalar>(target_point.x),
+				static_cast<SkScalar>(target_point.y),
+				paint_line
+			);
+
+			point a2{
+				static_cast<scalar>(target_point.x - cosf(line_angle + offset_to_line_angle)*arrowhead_length),
+				static_cast<scalar>(target_point.y - sinf(line_angle + offset_to_line_angle)*arrowhead_length)
+			};
+			canvas.drawLine(
+				static_cast<SkScalar>(a2.x),
+				static_cast<SkScalar>(a2.y),
+				static_cast<SkScalar>(target_point.x),
+				static_cast<SkScalar>(target_point.y),
+				paint_line
+			);
+
+		}
 
 		// the angle is in the range [0:pi] and [0:-pi],
-		// we need it to be in the range [0:2pi]
+		// we now need it to be in the range [0:2pi]
 		if (0 > line_angle)
 		{
 			line_angle = line_angle + 2 * pi;

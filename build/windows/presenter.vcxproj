@@ -31,7 +31,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\sources\presenter\edge.cpp" />
     <ClCompile Include="..\..\sources\presenter\edges.cpp" />
-    <ClCompile Include="..\..\sources\presenter\intersects.cpp" />
     <ClCompile Include="..\..\sources\presenter\presenter.cpp" />
     <ClCompile Include="..\..\sources\presenter\state.cpp" />
     <ClCompile Include="..\..\sources\presenter\states.cpp" />

@@ -2,9 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\..\sources\presenter\presenter.cpp" />
-    <ClCompile Include="..\..\sources\presenter\intersects.cpp">
-      <Filter>algorithms</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\sources\presenter\state.cpp">
       <Filter>model</Filter>
     </ClCompile>
@@ -41,9 +38,6 @@
   <ItemGroup>
     <Filter Include="model">
       <UniqueIdentifier>{51bc35ed-4eb3-442d-a8a8-95edff1ab4fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="algorithms">
-      <UniqueIdentifier>{bb91bff1-ebbd-495d-a405-7ca383f92d50}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
